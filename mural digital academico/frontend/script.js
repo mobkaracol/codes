@@ -2,12 +2,12 @@
 ╔════════════════════════════════════════════════════════════════════════╗
 ║                   MURAL DIGITAL ACADÊMICO - SCRIPT PRINCIPAL           ║
 ║                                                                        ║
-║  Este arquivo gerencia toda a interatividade do mural digital:        ║
-║  - Renderização de posts no canvas HTML5                              ║
-║  - Sistema de drag & drop para reorganizar posts                      ║
-║  - Adicionar e remover posts                                          ║
-║  - Persistência de dados com localStorage                             ║
-║  - Detecção de cliques e interações do mouse                          ║
+║  Este arquivo gerencia toda a interatividade do mural digital:         ║
+║  - Renderização de posts no canvas HTML5                               ║
+║  - Sistema de drag & drop para reorganizar posts                       ║
+║  - Adicionar e remover posts                                           ║
+║  - Persistência de dados com localStorage                              ║
+║  - Detecção de cliques e interações do mouse                           ║
 ╚════════════════════════════════════════════════════════════════════════╝
 */
 

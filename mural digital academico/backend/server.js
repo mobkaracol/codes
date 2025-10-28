@@ -1,14 +1,14 @@
 /*
 ╔════════════════════════════════════════════════════════════════════════╗
-║          SERVIDOR HTTP PARA MURAL DIGITAL ACADÊMICO                   ║
+║          SERVIDOR HTTP PARA MURAL DIGITAL ACADÊMICO                    ║
 ║                                                                        ║
-║  Servidor Node.js simples para servir arquivos estáticos do projeto. ║
-║  Funciona como um servidor web local para desenvolvimento.            ║
+║  Servidor Node.js simples para servir arquivos estáticos do projeto.   ║
+║  Funciona como um servidor web local para desenvolvimento.             ║
 ║                                                                        ║
 ║  Como usar:                                                            ║
-║  1. Certifique-se de ter Node.js instalado                           ║
-║  2. Execute: node server.js                                           ║
-║  3. Acesse: http://localhost:3000                                     ║
+║  1. Certifique-se de ter Node.js instalado                             ║
+║  2. Execute: node server.js                                            ║
+║  3. Acesse: http://localhost:3000                                      ║
 ╚════════════════════════════════════════════════════════════════════════╝
 */
 
