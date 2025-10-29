@@ -48,6 +48,9 @@ const mimeTypes = {
 // ============================================
 // CRIAÇÃO DO SERVIDOR HTTP
 // ============================================
+// Alteração: caminhos agora apontam para a pasta "frontend" (um nível acima)
+// e a URL "/" serve o arquivo frontend/index.html. Isso evita 404 ao pedir
+// páginas e assets estáticos.
 /**
  * Cria servidor que processa cada requisição HTTP:
  * - Determina qual arquivo servir baseado na URL
@@ -60,10 +63,11 @@ const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
 
     // ===== DETERMINAR ARQUIVO A SER SERVIDO =====
-    let filePath = '.' + req.url;
+    // Aponta para a pasta frontend (um nível acima)
+    let filePath = path.join(__dirname, '..', 'frontend', req.url);
     // Se a URL for apenas '/', serve o index.html
-    if (filePath === './') {
-        filePath = './index.html';
+    if (req.url === '/') {
+        filePath = path.join(__dirname, '..', 'frontend', 'index.html');
     }
 
     // ===== OBTER TIPO MIME DO ARQUIVO =====
