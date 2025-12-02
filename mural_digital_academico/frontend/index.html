@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <title>Mural Digital Acadêmico</title>
+</head>
+<body>
+
+    <!-- NAVEGAÇÃO PRINCIPAL
+
+    é onde está a barra de menu e os botôes 
+    principais do Mural, incluindo do de criação -->
+
+        <nav>
+
+            <div class="container">
+
+                <div class="menu">
+
+                    <!-- SIDEBAR DO MENU -->
+                
+                        <div class="sidebar-container">
+                            
+                            <button id="sidebarToggle" class="sidebar-bnt">
+                                <span class="hamburger"></span>
+                                <span class="hamburger"></span>
+                                <span class="hamburger"></span>
+                            </button>
+                            
+                            <div id="sidebarMenu" class="sidebar">
+                                <h3>CONFIGURAÇÕES</h3>
+                                <ul class="sidebar_menu">
+                                    <!-- botão para mudar o tema do fundo aqui -->
+                                    <li><a href="telaLogin.html">Login/Cadastro</a></li>
+                                    <li><a href="#">Sobre Nós</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    
+                    <div class="centro">
+                        <button class="botao">
+                            <img src="imagens/icone_anuncios.png" alt="Anuncios" title="">
+                        </button>
+
+                        <button class="botao" onclick="window.location.href='criacao.html' ">
+                            <img src="imagens/icone_lapis.png" alt="Criacao" title="Criação">
+                        </button>
+
+<!--                    <button class="botao">
+                            <img src="" alt="">
+                        </button>
+
+                        <button class="botao">
+                            <img src="" alt="">
+                        </button> -->
+
+                        <button class="botao" onclick="window.location.href='perfil.html'">
+                            <img src="imagens/icone_pessoa.png" alt="Login" title="Login">
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    <main>
+    <canvas id="tela"></canvas>
+    </main>
+
+    <!-- SCRIPT DO SIDEBAR
+    função de click para abrir e fechar -->
+
+    <script>    
+    const sidebar = document.getElementById('sidebarMenu');
+    const toggle = document.getElementById('sidebarToggle');
+
+    toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    });
+    </script>
+
+    <!-- SCRIPTS INPORTANTES PARA O
+        FUNCIONAMENTO DO MURAL -->
+
+    <script src="scripts/script.js" defer></script>
+
+</body>
+</html>
