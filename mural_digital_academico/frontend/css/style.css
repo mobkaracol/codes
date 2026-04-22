@@ -1,81 +1,205 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
+/* style.css — Tela de Login */
 
-:root {
-    --bg-body: rgb(230, 221, 219);
-    --bg-sidebar: rgb(144, 121, 121);
-    --bg-hover: rgb(161, 140, 140);
-    --bg-button: rgb(226, 211, 211);
-    --bg-canvas: rgb(250, 247, 247);
-
-    --text-main: rgb(43, 21, 21);
-    --text-hover: rgb(224, 207, 207);
-
-    --shadow: rgb(206, 185, 181);
-    --shadow-canvas: rgb(207, 196, 192);
-}
-
-body.dark{
-    --bg-body: rgb(53, 53, 61);
-    --bg-sidebar: rgb(48, 46, 75);
-    --bg-hover: rgb(99, 99, 134);
-    --bg-button: rgb(211, 214, 226);
-    --bg-canvas: rgb(247, 247, 250);
-
-    --text-main: rgb(14, 15, 18);
-    --text-hover: rgb(207, 207, 224);
-
-    --shadow: rgb(182, 181, 206);
-    --shadow-canvas: rgb(21, 22, 25);
-}
-
-body{
-    background: var(--bg-body);
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    transition: background 0.4s ease;
-}
-
-#Background{
+#Background {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-
-#container{
-    background-color:var(--bg-canvas);
-    box-shadow: 0px 0px 7px 3px var(--shadow-canvas);
+/* ── Card principal ─────────────────────────────────── */
+#login-card {
+    background-color: var(--bg-canvas);
+    box-shadow: 0px 0px 18px 4px var(--shadow-canvas);
     border-radius: 20px;
-    width: 470px;
-    padding: 25px;
-    height: 600px; 
-}
-
-.form{
+    width: 420px;
+    padding: 40px 36px 30px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 24px;
 }
 
-.form2{
+/* ── Cabeçalho ──────────────────────────────────────── */
+.login-header {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-#container2{
-    display: block;
     align-items: center;
-    margin-top: 150px;
-    margin-left: 45px;
+    gap: 8px;
+    text-align: center;
 }
 
-#container3{
+.login-icon {
+    font-size: 48px;
+    color: var(--bg-sidebar);
+    background: var(--bg-button);
+    border-radius: 50%;
+    padding: 12px;
+    line-height: 1;
+}
+
+.login-title {
+    font-size: 26px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: var(--text-main);
+    font-weight: bold;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--bg-sidebar);
+}
+
+/* ── Mensagem de erro ───────────────────────────────── */
+.error-msg {
+    background: #fde8e8;
+    color: #8b0000;
+    border: 1px solid #e9b0b0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.dark .error-msg {
+    background: #3d1a1a;
+    color: #ffaaaa;
+    border-color: #7a3030;
+}
+
+/* ── Grupos de campo ────────────────────────────────── */
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-label {
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 20px;
+    color: var(--bg-sidebar);
+    pointer-events: none;
+}
+
+.field-input {
+    width: 100%;
+    border: 2px solid var(--shadow);
+    padding: 11px 44px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: white;
+    color: var(--text-main);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.field-input:focus {
+    outline: none;
+    border-color: var(--bg-sidebar);
+    box-shadow: 0 0 6px var(--shadow);
+}
+
+/* Botão mostrar/ocultar senha */
+.toggle-pass-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--bg-sidebar);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.2s;
+}
+
+.toggle-pass-btn:hover {
+    color: var(--text-main);
+}
+
+/* ── Botão Entrar ───────────────────────────────────── */
+.btn-entrar {
+    margin-top: 6px;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-sidebar);
+    color: var(--text-hover);
+    border: none;
+    border-radius: 9px;
+    font-size: 16px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-entrar:hover:not(:disabled) {
+    background-color: var(--bg-hover);
+    box-shadow: 0 0 8px var(--shadow);
+    transform: translateY(-1px);
+}
+
+.btn-entrar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Spinner de carregamento */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Rodapé ─────────────────────────────────────────── */
+.login-footer {
+    text-align: center;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--bg-sidebar);
+    padding-top: 8px;
+    border-top: 1px solid var(--shadow);
+}
+
+/* ── Legado (mantido para não quebrar outras páginas) ── */
+#container3 {
     display: flex;
     justify-content: flex;
     width: 655px;    
@@ -98,16 +222,7 @@ input:focus {
   box-shadow: 0 0 5px var(--text-main);
 }
 
-#password{
-    width: 325px;
-    color: var(--text-main);
-
-}
-
-#user{
-    width: 325px;
-    color: var(--text-main);
-}
+/* #password e #user — removidos para não conflitar com .field-input */
 
 .button{
     border-radius: 5px;

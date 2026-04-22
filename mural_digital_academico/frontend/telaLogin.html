@@ -5,58 +5,173 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/style.css">
-    <title>Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Login — Mural Digital</title>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN DO USUÁRIO
-        Alunos, professores e pessoas da escola no geral
-        poderão fazer criar perfis para terem acesso ao Mural Digital.
+    <!-- Sidebar para dark mode -->
+    <div id="sidebar-container"></div>
+    <script src="scripts/sidebar.js"></script>
 
-        Somentes pessoas com um código especifico poderão criar blocos e conteúdo
-        no geral para Mural. -->
+    <div id="Background">
 
-    <form>
-        <div id="Login"> <!-- Tela inteira! -->
+        <div id="login-card">
 
-            <div id="Background"> <!-- fundo -->
-                
-                <div id="container"> <!-- Parte do quadrado branco -->
-
-                    <label class="login-text"><b>Faça seu login</b></label>
-
-                    <div id="container2"> <!-- Parte das informaçoes no quadrado branco -->
-
-                        <div class="form"> <!-- Parte do login -->
-
-                            <label for="username"><b>Login:</b></label>
-                            <input type="text" id="user" placeholder="Digite seu nome...">
-
-                        </div>
-
-                        <div class="form2"> <!-- Parte da senha -->
-
-                            <label for="password"><b>Senha:</b></label>
-                            <input type="password" id="password" placeholder="Digite sua senha...">
-
-                        </div>
-
-                    </div>
-                        
-                    <div id="container3"> <!-- Parte do botão "entrar" -->
-
-                        <button type="button" class="button">Entrar</button>
-
-                    </div>
-                    <!-- O rodapé -->
-                     <footer><b>Centro Paula Souza | Alfredo dos Barros Santos | 2026</footer>
-
-                </div>
-
+            <!-- Cabeçalho do card -->
+            <div class="login-header">
+                <span class="material-symbols-outlined login-icon">person</span>
+                <h1 class="login-title">Mural Digital</h1>
+                <p class="login-subtitle">Faça seu login para continuar</p>
             </div>
 
+            <!-- Mensagem de erro -->
+            <div id="error-msg" class="error-msg" hidden>
+                <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">error</span>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Formulário -->
+            <form id="login-form" autocomplete="off">
+
+                <div class="field-group">
+                    <label for="user" class="field-label">Usuário</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">badge</span>
+                        <input
+                            type="text"
+                            id="input-user"
+                            class="field-input"
+                            placeholder="Digite seu usuário..."
+                            autocomplete="username"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="password" class="field-label">Senha</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <input
+                            type="password"
+                            id="input-password"
+                            class="field-input"
+                            placeholder="Digite sua senha..."
+                            autocomplete="current-password"
+                            required
+                        />
+                        <button type="button" id="toggle-pass" class="toggle-pass-btn" title="Mostrar/ocultar senha">
+                            <span class="material-symbols-outlined" id="toggle-pass-icon">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-entrar" class="btn-entrar">
+                    <span id="btn-label">Entrar</span>
+                    <span id="btn-spinner" class="spinner" hidden></span>
+                </button>
+
+            </form>
+
+            <footer class="login-footer">
+                Centro Paula Souza &nbsp;|&nbsp; Alfredo dos Barros Santos &nbsp;|&nbsp; 2026
+            </footer>
+
         </div>
-    </form>
-    
+
+    </div>
+
+    <script>
+        // ── Mostrar/ocultar senha ──────────────────────────────────────────
+        document.getElementById('toggle-pass').addEventListener('click', () => {
+            const input = document.getElementById('input-password');
+            const icon  = document.getElementById('toggle-pass-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        });
+
+        // ── Exibir erro ───────────────────────────────────────────────────
+        function showError(msg) {
+            const box  = document.getElementById('error-msg');
+            const text = document.getElementById('error-text');
+            text.textContent = msg;
+            box.hidden = false;
+        }
+
+        function hideError() {
+            document.getElementById('error-msg').hidden = true;
+        }
+
+        // ── Submissão do formulário ───────────────────────────────────────
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('input-user').value.trim();
+            const password = document.getElementById('input-password').value;
+
+            if (!username || !password) {
+                showError('Preencha todos os campos.');
+                return;
+            }
+
+            // Estado de carregamento
+            const btnLabel   = document.getElementById('btn-label');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const btnEntrar  = document.getElementById('btn-entrar');
+            btnLabel.hidden   = true;
+            btnSpinner.hidden = false;
+            btnEntrar.disabled = true;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showError(data.error || 'Erro ao fazer login.');
+                    return;
+                }
+
+                // Salvar sessão no localStorage
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('userName',  data.name);
+                localStorage.setItem('userRole',  data.role);
+
+                // Redirecionar para o mural
+                window.location.href = 'index.html';
+
+            } catch (err) {
+                showError('Não foi possível conectar ao servidor. Tente novamente.');
+            } finally {
+                btnLabel.hidden   = false;
+                btnSpinner.hidden = true;
+                btnEntrar.disabled = false;
+            }
+        });
+
+        // ── Se já estiver autenticado, redireciona ────────────────────────
+        (async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            try {
+                const res = await fetch('/api/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (res.ok) window.location.href = 'index.html';
+            } catch { /* sem conexão, segue normal */ }
+        })();
+    </script>
+
 </body>
 </html>
