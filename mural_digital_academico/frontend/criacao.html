@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/criacao.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <title>Criação de Notas</title>
+
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+    <script src="scripts/sidebar.js"></script>
+
+    <!--ARÉA DE CRIAÇÃO DE BLOCOS
+
+    onde fica a parte de criação de blocos 
+        e seus conteúdos -->
+
+        <nav>
+            <div class="container">
+
+                <div class="menu">
+
+                    <div class="sidebar-placeholder"></div>
+
+                    <div class="centroCriacao">
+
+                    <button class="botaoVoltar" onclick="window.location.href='index.html'">
+                        <span class="material-symbols-outlined" alt="Voltar" title="Voltar ao Mural"></span>
+                    </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+        <!-- PARTE DO HTML PARA A CRIAÇÃO 
+                DE BLOCOS DE TEXTO -->
+
+    <main>
+
+        <div class="container_criacao">
+            <div class="formulario_criacao">
+                
+                <!-- CRIAÇÃO DE BLOCOS -->
+                <form id="bloco_criacao">
+
+                        <div class="grupo_titulo">
+                            <h1>Crie uma nova postagem</h1>
+
+                            <br>
+
+                            <!-- TITULO DO BLOCO -->
+                            <label for="titulo">Título</label>
+                            <input type="text" id="titulo" 
+                            placeholder="Coloque um título..." 
+                            maxlength="50" required>
+
+                            <span id="contador_titulo" class="contador">0/50</span>
+
+                        </div>
+
+                        <br>
+
+                        <!-- CONTEÚDO DO BLOCO -->
+                        <div class="grupo_conteudo">
+
+                            <label for="conteudo">Conteúdo</label>
+                            <textarea id="conteudo"  
+                            placeholder="Crie o conteúdo do bloco..."
+                            maxlength="200" required></textarea>
+
+                            <span id="contador_conteudo" class="contador">0/200</span>
+
+                        </div>
+
+                        <br>
+
+                        <!-- CORES PARA O BLOCO -->
+                        <div class="grupo_cores">
+
+                            <label for="cor">Cor do Bloco</label>
+                            <div class="opcao_cores">
+
+                            <input type="radio" id="cor1" name="cor" value="#8b8bee" checked>
+                            <label for="cor1" class="cor_label" 
+                            style="background-color: #bb9cd9;"></label>
+
+                            <input type="radio" id="cor2" name="cor" value="#f58cc2">
+                            <label for="cor2" class="cor_label" 
+                            style="background-color: #f58cc2;"></label>
+
+                            <input type="radio" id="cor3" name="cor" value="#e47f8f">
+                            <label for="cor3" class="cor_label" 
+                            style="background-color: #e47f8f;"></label>
+
+                            <input type="radio" id="cor4" name="cor" value="#fad15f">
+                            <label for="cor4" class="cor_label" 
+                            style="background-color: #fab75f;"></label>
+
+                            <input type="radio" id="cor5" name="cor" value="#e9d395">
+                            <label for="cor5" class="cor_label" 
+                            style="background-color: #f7e1a7;"></label>
+
+                            <input type="radio" id="cor6" name="cor" value="#b3de8e">
+                            <label for="cor6" class="cor_label" 
+                            style="background-color: #b3de8e;"></label>
+                            
+                            <input type="radio" id="cor7" name="cor" value="#87d6f5">
+                            <label for="cor7" class="cor_label" 
+                            style="background-color: #87d6f5;"></label>
+
+                            </div>
+                        </div>
+
+                        <!-- BOTÃO DE AÇÃO -->
+                        <div class="button_grupo">
+                                <button type="submit" class="botao_publicar">
+                                    Salvar Bloco!
+                                </button>
+                        </div>
+                    </form>
+            </div>
+                
+            <br>
+            
+                <!-- PRÉVIA DA POSTAGEM -->
+                <div class="preview">
+
+                    <div class="preview_grupo">
+
+                        <h1>Prévia do Bloco</h1>
+                        
+                            <div class="preview_bloco" id="preview">
+                                <div class="preview_close"></div>
+                                <div class="preview_titulo">Título do Bloco...</div>
+                                <div class="preview_divisor"></div>
+                                <div class="preview_conteudo">Conteúdo do Bloco...</div>
+                            </div>
+
+                    </div>
+                    
+                </div>
+            
+        </div>
+    </main>
+
+    <script src="scripts/script2.js" defer></script>
+
+</body>
+</html>
