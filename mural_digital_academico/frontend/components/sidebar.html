@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/index.css">
-    <title>Document</title>
-</head>
-<body>
-    
-   <!-- BARRA DE NAVEGAÇÃO 
-    
-        onde fica os botões com as principais funções 
-        do mural, como botão de criação, imagens, login e 
-        botão de mudança de tema-->
+<!-- BARRA DE NAVEGAÇÃO
 
-    <aside class="sidebar">
+     onde fica os botões com as principais funções
+     do mural, como botão de criação, imagens, login e
+     botão de mudança de tema -->
+
+<aside class="sidebar">
 
         <!-- sidebar header -->
         <header class="sidebar-header">
@@ -46,27 +36,29 @@
 
         <!-- segunda lista do sidebar -->
         <ul class="nav-list second-list">
-
-            <button id="login" class="link-login">
-                <a href="telaLogin.html">
-                    <span class="nav-icon material-symbols-outlined">person</span>
+            <li class="nav-item">
+                <a id="login" class="nav-link" href="telaLogin.html" title="Login">
+                    <span id="login-icon" class="nav-icon material-symbols-outlined">person</span>
+                    <span id="login-label" class="nav-label">Login</span>
                 </a>
-            </button>
+            </li>
 
-            <button id="theme-toggle" class="nav-theme">
-                <span class="nav-icon material-symbols-outlined">dark_mode</span>
-            </button>
+            <li class="nav-item">
+                <button id="theme-toggle" class="nav-link nav-theme" type="button" title="Alternar tema">
+                    <span class="nav-icon material-symbols-outlined">dark_mode</span>
+                    <span class="nav-label">Tema</span>
+                </button>
+            </li>
 
-            <button id="group" class="link-group">
-                <a href="sobreNos.html"></a>
+            <li class="nav-item">
+                <a id="group" class="nav-link" href="sobreNos.html" title="Sobre nós">
                     <span class="nav-icon material-symbols-outlined">group</span>
-            </button>
+                    <span class="nav-label">Sobre nós</span>
+                </a>
+            </li>
 
         </ul>
 
     </nav>
 
-    </aside>
-
-</body>
-</html>
+</aside>

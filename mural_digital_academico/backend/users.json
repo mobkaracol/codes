@@ -19,5 +19,12 @@
     "name": "Professor Teste",
     "role": "professor",
     "passwordHash": "00624b02e1f9b996a3278f559d5d55313552ad2c0bafc82adfd975c12df61eaf"
+  },
+  {
+    "id": 4,
+    "username": "jubileu",
+    "name": "Jubileu Costa Santos",
+    "role": "aluno",
+    "passwordHash": "3d12504b41addb12421dc6f2aae9950f8a9a549e08012ec3376dc93055ed2785"
   }
 ]

@@ -1,45 +1,183 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Cadastro</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Cadastro - Mural Digital</title>
 </head>
-<body>
+<body class="login-page cadastro-page">
+    <div id="sidebar-container"></div>
+    <script src="scripts/sidebar.js"></script>
 
-    //TELA DE CADASTRO DO USUÁRIO
-        Aba de cadastro e criação de perfil do usuário
+    <div id="Background">
+        <div id="login-card" class="cadastro-card">
+            <div class="login-header">
+                <span class="material-symbols-outlined login-icon">person_add</span>
+                <h1 class="login-title">Criar conta</h1>
+                <p class="login-subtitle">Cadastre-se para acessar o mural</p>
+            </div>
 
-    
-    <div class="container_cadastro">
-        <div>
-            <h2>Cadastro do Usuário</h2>
+            <div id="register-error" class="error-msg" hidden>
+                <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">error</span>
+                <span id="register-error-text"></span>
+            </div>
+
+            <div id="register-success" class="success-msg" hidden>
+                <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">check_circle</span>
+                <span id="register-success-text"></span>
+            </div>
+
+            <form id="register-form" autocomplete="off">
+                <div class="field-group">
+                    <label for="input-name" class="field-label">Nome completo</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">badge</span>
+                        <input type="text" id="input-name" class="field-input" placeholder="Ex: Maria Silva" required>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="input-username" class="field-label">Usuário</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">alternate_email</span>
+                        <input type="text" id="input-username" class="field-input" placeholder="Ex: maria.silva" required>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="input-password" class="field-label">Senha</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <input type="password" id="input-password" class="field-input" placeholder="Mínimo 6 caracteres" required>
+                        <button type="button" id="toggle-pass" class="toggle-pass-btn" title="Mostrar/ocultar senha">
+                            <span class="material-symbols-outlined" id="toggle-pass-icon">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-cadastrar" class="btn-entrar">
+                    <span id="btn-label">Cadastrar</span>
+                    <span id="btn-spinner" class="spinner" hidden></span>
+                </button>
+
+                <a class="auth-link" href="telaLogin.html">Já tem conta? Ir para login</a>
+            </form>
+
+            <footer class="login-footer">
+                Centro Paula Souza &nbsp;|&nbsp; Alfredo dos Barros Santos &nbsp;|&nbsp; 2026
+            </footer>
         </div>
-
-        <form class="form" id="formulario">
-
-            <div class="formulario">
-                <label for="username">Nome:</label>
-                <input type="text" id="usuario" placeholder="Digite seu nome...">
-            </div>
-            
-            <div class="formulario">
-                <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Digite seu email...">
-            </div>
-
-            <div class="formulario">
-                <label for="password">Senha:</label>
-                <input type="password" id="senha" placeholder="Digite sua senha...">
-            </div>
-
-            <button type="submit" class="botao3">Enviar</button>
-            <button type="reset" class="botao3" onclick="window.location.href='index.html'">Voltar</button>
-
-        </form>
     </div>
 
+    <script>
+        const runningOnBackendHost = ['localhost:3000', '127.0.0.1:3000'].includes(window.location.host);
+        const API_BASE = (window.location.protocol === 'file:' || !runningOnBackendHost)
+            ? 'http://localhost:3000'
+            : '';
 
+        const errorBox = document.getElementById('register-error');
+        const errorText = document.getElementById('register-error-text');
+        const successBox = document.getElementById('register-success');
+        const successText = document.getElementById('register-success-text');
+
+        function showError(msg) {
+            successBox.hidden = true;
+            errorText.textContent = msg;
+            errorBox.hidden = false;
+        }
+
+        function showSuccess(msg) {
+            errorBox.hidden = true;
+            successText.textContent = msg;
+            successBox.hidden = false;
+        }
+
+        function hideMessages() {
+            errorBox.hidden = true;
+            successBox.hidden = true;
+        }
+
+        async function parseResponse(res) {
+            const raw = await res.text();
+            if (!raw) return {};
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return { error: 'Resposta inválida do servidor.' };
+            }
+        }
+
+        document.getElementById('toggle-pass').addEventListener('click', () => {
+            const input = document.getElementById('input-password');
+            const icon = document.getElementById('toggle-pass-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessages();
+
+            const name = document.getElementById('input-name').value.trim();
+            const username = document.getElementById('input-username').value.trim().toLowerCase();
+            const password = document.getElementById('input-password').value;
+
+            if (name.length < 3) {
+                showError('Nome precisa ter pelo menos 3 caracteres.');
+                return;
+            }
+
+            if (!/^[a-z0-9._-]{3,20}$/.test(username)) {
+                showError('Usuário inválido. Use 3 a 20 caracteres: a-z, 0-9, ., _ ou -.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Senha precisa ter no mínimo 6 caracteres.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-cadastrar');
+            const btnLabel = document.getElementById('btn-label');
+            const btnSpinner = document.getElementById('btn-spinner');
+            btn.disabled = true;
+            btnLabel.hidden = true;
+            btnSpinner.hidden = false;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, username, password })
+                });
+
+                const data = await parseResponse(res);
+
+                if (!res.ok) {
+                    showError(data.error || 'Não foi possível concluir o cadastro.');
+                    return;
+                }
+
+                showSuccess('Cadastro realizado com sucesso. Você será redirecionado para login.');
+                setTimeout(() => {
+                    window.location.href = 'telaLogin.html';
+                }, 1400);
+            } catch {
+                showError('Servidor offline. Inicie o backend com: node backend/server.js');
+            } finally {
+                btn.disabled = false;
+                btnLabel.hidden = false;
+                btnSpinner.hidden = true;
+            }
+        });
+    </script>
 </body>
-</html> -->
+</html>

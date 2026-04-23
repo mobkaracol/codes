@@ -58,6 +58,10 @@ function loadUsers() {
     }
 }
 
+function saveUsers(users) {
+    fs.writeFileSync(USERS_DB, JSON.stringify(users, null, 2), 'utf-8');
+}
+
 function sendJSON(res, statusCode, data) {
     const body = JSON.stringify(data);
     res.writeHead(statusCode, {
@@ -100,6 +104,62 @@ const mimeTypes = {
 // ============================================
 async function handleAPI(req, res) {
     const url = req.url.split('?')[0];
+
+    // ----- POST /api/register -----
+    if (url === '/api/register' && req.method === 'POST') {
+        let body;
+        try { body = await readBody(req); }
+        catch { return sendJSON(res, 400, { error: 'Requisição inválida.' }); }
+
+        const { name, username, password } = body;
+
+        if (!name || !username || !password) {
+            return sendJSON(res, 400, { error: 'Nome, usuário e senha são obrigatórios.' });
+        }
+
+        const cleanName = String(name).trim();
+        const cleanUsername = String(username).trim().toLowerCase();
+        const cleanPassword = String(password);
+
+        if (cleanName.length < 3) {
+            return sendJSON(res, 400, { error: 'Nome deve ter pelo menos 3 caracteres.' });
+        }
+
+        if (!/^[a-z0-9._-]{3,20}$/.test(cleanUsername)) {
+            return sendJSON(res, 400, { error: 'Usuário deve ter 3 a 20 caracteres (a-z, 0-9, ., _ ou -).' });
+        }
+
+        if (cleanPassword.length < 6) {
+            return sendJSON(res, 400, { error: 'Senha deve ter pelo menos 6 caracteres.' });
+        }
+
+        const users = loadUsers();
+        const exists = users.some(u => u.username === cleanUsername);
+
+        if (exists) {
+            return sendJSON(res, 409, { error: 'Esse usuário já existe.' });
+        }
+
+        const nextId = users.length ? Math.max(...users.map(u => Number(u.id) || 0)) + 1 : 1;
+        const newUser = {
+            id: nextId,
+            username: cleanUsername,
+            name: cleanName,
+            role: 'aluno',
+            passwordHash: hashPassword(cleanPassword)
+        };
+
+        users.push(newUser);
+
+        try {
+            saveUsers(users);
+        } catch {
+            return sendJSON(res, 500, { error: 'Falha ao salvar usuário.' });
+        }
+
+        console.log(`[AUTH] Cadastro: ${newUser.username} (${newUser.role})`);
+        return sendJSON(res, 201, { ok: true, message: 'Cadastro realizado com sucesso.' });
+    }
 
     // ----- POST /api/login -----
     if (url === '/api/login' && req.method === 'POST') {

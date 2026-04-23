@@ -1,3 +1,48 @@
+/* ── Mensagem de sucesso ───────────────────────────────── */
+.success-msg {
+    background: #e7f7ea;
+    color: #155724;
+    border: 1px solid #b8e7c1;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.success-msg[hidden] {
+    display: none !important;
+}
+
+body.dark .success-msg {
+    background: #153a22;
+    color: #9ff0ba;
+    border-color: #2d6b3f;
+}
+#register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-link {
+    color: var(--bg-sidebar);
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.cadastro-card {
+    width: 440px;
+}
 /* style.css — Tela de Login */
 
 #Background {
@@ -63,6 +108,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.error-msg[hidden] {
+    display: none !important;
 }
 
 body.dark .error-msg {
@@ -184,6 +233,10 @@ body.dark .error-msg {
     display: inline-block;
 }
 
+.spinner[hidden] {
+    display: none !important;
+}
+
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
@@ -198,6 +251,59 @@ body.dark .error-msg {
     border-top: 1px solid var(--shadow);
 }
 
+/* ── Responsividade ─────────────────────────────────── */
+@media (max-width: 900px) {
+    body.login-page .sidebar {
+        margin: 16px;
+        height: auto;
+    }
+
+    #Background {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    body.login-page .sidebar {
+        display: none;
+    }
+
+    #login-card {
+        width: 100%;
+        max-width: 430px;
+        padding: 26px 20px 20px;
+        border-radius: 16px;
+        gap: 18px;
+    }
+
+    .cadastro-card {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+
+    .login-subtitle {
+        font-size: 13px;
+    }
+
+    .field-input {
+        font-size: 14px;
+        padding: 10px 40px;
+    }
+
+    .btn-entrar {
+        padding: 11px;
+    }
+
+    .login-footer {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+}
+
 /* ── Legado (mantido para não quebrar outras páginas) ── */
 #container3 {
     display: flex;
@@ -206,7 +312,7 @@ body.dark .error-msg {
     margin-top: 5px;   
 }
 
-input{
+#container input{
     width: 100%;
     border: 2px solid var(--text-main);
     padding: 10px 15px;
@@ -216,7 +322,7 @@ input{
     background: white;
 }
 
-input:focus {
+#container input:focus {
   outline: none;
   border-color: var(--text-main);
   box-shadow: 0 0 5px var(--text-main);
