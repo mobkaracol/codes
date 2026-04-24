@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "name": "Administrador",
+    "role": "admin",
+    "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
+  },
+  {
+    "id": 2,
+    "username": "aluno",
+    "name": "Aluno Teste",
+    "role": "aluno",
+    "passwordHash": "fd5675ae2e933b4070e682938203dcbb978966909cf03f3d9c4f271ad1b3107b"
+  },
+  {
+    "id": 3,
+    "username": "professor",
+    "name": "Professor Teste",
+    "role": "professor",
+    "passwordHash": "00624b02e1f9b996a3278f559d5d55313552ad2c0bafc82adfd975c12df61eaf"
+  },
+  {
+    "id": 4,
+    "username": "jubileu",
+    "name": "Jubileu Costa Santos",
+    "role": "aluno",
+    "passwordHash": "3d12504b41addb12421dc6f2aae9950f8a9a549e08012ec3376dc93055ed2785"
+  }
+]

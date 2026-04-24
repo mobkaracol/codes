@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Login — Mural Digital</title>
+</head>
+<body class="login-page">
+
+    <!-- Sidebar para dark mode -->
+    <div id="sidebar-container"></div>
+    <script src="scripts/sidebar.js"></script>
+
+    <div id="Background">
+
+        <div id="login-card">
+
+            <!-- Cabeçalho do card -->
+            <div class="login-header">
+                <span class="material-symbols-outlined login-icon">person</span>
+                <h1 class="login-title">Mural Digital</h1>
+                <p class="login-subtitle">Faça seu login para continuar</p>
+            </div>
+
+            <!-- Mensagem de erro -->
+            <div id="error-msg" class="error-msg" hidden>
+                <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">error</span>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Formulário -->
+            <form id="login-form" autocomplete="off">
+
+                <div class="field-group">
+                    <label for="input-user" class="field-label">Usuário</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">badge</span>
+                        <input
+                            type="text"
+                            id="input-user"
+                            class="field-input"
+                            placeholder="Digite seu usuário..."
+                            autocomplete="username"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="input-password" class="field-label">Senha</label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <input
+                            type="password"
+                            id="input-password"
+                            class="field-input"
+                            placeholder="Digite sua senha..."
+                            autocomplete="current-password"
+                            required
+                        />
+                        <button type="button" id="toggle-pass" class="toggle-pass-btn" title="Mostrar/ocultar senha">
+                            <span class="material-symbols-outlined" id="toggle-pass-icon">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-entrar" class="btn-entrar">
+                    <span id="btn-label">Entrar</span>
+                    <span id="btn-spinner" class="spinner" hidden></span>
+                </button>
+
+                <a class="auth-link" href="telaCadastro.html">Ainda não tem conta? Cadastre-se</a>
+
+            </form>
+
+            <footer class="login-footer">
+                Centro Paula Souza &nbsp;|&nbsp; Alfredo dos Barros Santos &nbsp;|&nbsp; 2026
+            </footer>
+
+        </div>
+
+    </div>
+
+    <script>
+        const runningOnBackendHost = ['localhost:3000', '127.0.0.1:3000'].includes(window.location.host);
+        const API_BASE = (window.location.protocol === 'file:' || !runningOnBackendHost)
+            ? 'http://localhost:3000'
+            : '';
+
+        // ── Mostrar/ocultar senha ──────────────────────────────────────────
+        document.getElementById('toggle-pass').addEventListener('click', () => {
+            const input = document.getElementById('input-password');
+            const icon  = document.getElementById('toggle-pass-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        });
+
+        // ── Exibir erro ───────────────────────────────────────────────────
+        function showError(msg) {
+            const box  = document.getElementById('error-msg');
+            const text = document.getElementById('error-text');
+            text.textContent = msg;
+            box.hidden = false;
+        }
+
+        function hideError() {
+            document.getElementById('error-msg').hidden = true;
+        }
+
+        async function parseResponse(res) {
+            const raw = await res.text();
+            if (!raw) return {};
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return { error: 'Resposta inválida do servidor.' };
+            }
+        }
+
+        // ── Submissão do formulário ───────────────────────────────────────
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('input-user').value.trim();
+            const password = document.getElementById('input-password').value;
+
+            if (!username || !password) {
+                showError('Preencha todos os campos.');
+                return;
+            }
+
+            // Estado de carregamento
+            const btnLabel   = document.getElementById('btn-label');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const btnEntrar  = document.getElementById('btn-entrar');
+            btnLabel.hidden   = true;
+            btnSpinner.hidden = false;
+            btnEntrar.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await parseResponse(res);
+
+                if (!res.ok) {
+                    showError(data.error || 'Erro ao fazer login.');
+                    return;
+                }
+
+                // Salvar sessão no localStorage
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('userName',  data.name);
+                localStorage.setItem('userRole',  data.role);
+
+                // Redirecionar para o mural
+                window.location.href = 'index.html';
+
+            } catch (err) {
+                showError('Servidor offline. Inicie o backend com: node backend/server.js');
+            } finally {
+                btnLabel.hidden   = false;
+                btnSpinner.hidden = true;
+                btnEntrar.disabled = false;
+            }
+        });
+
+        // ── Se já estiver autenticado, redireciona ────────────────────────
+        (async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/me`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (res.ok) window.location.href = 'index.html';
+            } catch { /* sem conexão, segue normal */ }
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+
+    <!-- link do google fonts para icons -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <title>Mural Digital Acadêmico</title>
+    
+</head>
+<body>
+
+    <!-- PARTE PRINCIPAL DO MURAL
+
+    é onde mostra a barra de menu e os botôes 
+    principais do Mural, incluindo o botão de criação -->
+
+    <div id="sidebar-container"></div>
+    <script src="scripts/sidebar.js"></script>
+
+<!--     <aside class="sidebar">
+
+        //sidebar header 
+        <header class="sidebar-header">
+            <button class="toggler sidebar-toggler">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+        </header>
+
+    <nav class="sidebar-nav">
+
+        //primeira lista do sidebar 
+        <ul class="nav-list">
+
+            <li class="nav-item">
+                <a href="criacao.html" class="nav-link">
+                    <span class="nav-icon material-symbols-outlined">edit</span>
+                    <span class="nav-label">Criação</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="" class="nav-link">
+                    <span class="nav-icon material-symbols-outlined">image</span>
+                    <span class="nav-label">Imagens</span>
+                </a>
+            </li>
+
+        </ul>
+
+        //segunda lista do sidebar
+        <ul class="nav-list second-list">
+
+            <button id="login" class="link-login">
+                <a href="telaLogin.html">
+                    <span class="nav-icon material-symbols-outlined">person</span>
+                </a>
+            </button>
+
+
+            <button id="theme-toggle" class="nav-theme">
+                <span class="nav-icon material-symbols-outlined">dark_mode</span>
+            </button>
+
+        </ul>
+
+    </nav>
+
+    </aside> -->
+
+    <!-- CANVAS -->
+
+    <main>
+    <canvas id="tela"></canvas>
+    </main>
+
+    <!-- SCRIPT DO SIDEBAR
+    função de click para abrir e fechar -->
+
+    <script>
+    const sidebar = document.querySelector(".sidebar");   
+    const sidebarToggler = document.querySelector(".sidebar-toggler");
+    const themeButton = document.getElementById("theme-toggle");
+    const themeIcon = themeButton.querySelector("span");
+
+    //toggle sidebar collapsed state
+    sidebarToggler.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+    });
+
+    /* SCRIPT DO BOTÃO DARKMODE */
+
+    /* muda o icone */
+    function updateThemeIcon() {
+        if(document.body.classList.contains("dark")) {
+            themeIcon.textContent = "light_mode";
+        } else {
+            themeIcon.textContent = "dark_mode";
+        }
+    }
+
+    /* muda o tema do fundo */
+    themeButton.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+
+        if(document.body.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+        }else{
+            localStorage.setItem("theme","light");
+        }    
+        
+        updateThemeIcon();
+        
+    });
+
+    if(localStorage.getItem("theme") === "dark"){
+        document.body.classList.add("dark");
+    }
+
+    </script>
+
+    <!-- SCRIPTS INPORTANTES PARA O
+        FUNCIONAMENTO DO MURAL -->
+
+    <script src="scripts/script.js" defer></script>
+
+</body>
+</html>
