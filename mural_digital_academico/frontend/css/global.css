@@ -1,0 +1,35 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-body: rgb(230, 221, 219);
+    --bg-sidebar: rgb(97, 95, 109);
+    --bg-hover: rgb(115, 112, 135);
+    --bg-button: rgb(212, 211, 226);
+    --bg-canvas: rgb(250, 247, 247);
+    --bg-card: rgb(214, 197, 197);
+
+    --text: rgb(206, 103, 103);
+    --text-main: rgb(22, 21, 43);
+    --text-hover: rgb(208, 207, 224);
+
+    --shadow: rgb(186, 181, 206);
+    --shadow-canvas: rgb(207, 196, 192);
+}
+
+body.dark{
+    --bg-body: rgb(125, 125, 172);
+    --bg-sidebar: rgb(42, 41, 59);
+    --bg-hover: rgb(99, 99, 134);
+    --bg-button: rgb(211, 214, 226);
+    --bg-canvas: rgb(247, 247, 250);
+
+    --text-main: rgb(14, 15, 18);
+    --text-hover: rgb(207, 207, 224);
+
+    --shadow: rgb(182, 181, 206);
+    --shadow-canvas: rgb(21, 22, 25);
+}

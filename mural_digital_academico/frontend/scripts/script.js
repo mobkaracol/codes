@@ -37,6 +37,7 @@ class Bloco {
         this.content = content;
         this.color = color;
         this.font = font;
+        this.type = 'texto'
 
         //propriedades de arrastar
         this.isDragging = false;
@@ -121,6 +122,57 @@ class Bloco {
     
 }
 
+class ImagemBloco {
+    constructor(x, y, base64Data, width = 200, height = 200) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.base64Data = base64Data;
+        this.type = 'imagem';
+
+        this.isDragging = false;
+        this.resizing = false;
+        this.offsetX = 0;
+        this.offsetY = 0;
+
+        this.imgElement = new Image();
+        if (base64Data) {
+            this.imgElement.src = base64Data;
+            this.imgElement.onload = () => render();
+
+        }
+
+    }    
+
+        contains(x, y) {
+        return( 
+        x >= this.x && 
+        x <= this.x + this.width &&
+        y >= this.y && 
+        y <= this.y + this.height);
+
+    }
+
+    isCloseButton(x, y) {
+        const closeX = this.x + this.width - 15;
+        const closeY = this.y + 15;
+
+        const distance = Math.sqrt((x - closeX) ** 2 + (y - closeY) ** 2);
+        return distance <= 8;
+    }
+
+    isResizeHandle(x, y) {
+        const size = 15;
+
+        return (
+            x >= this.x + this.width - size &&
+            y >= this.y + this.height - size
+        );
+    }
+}
+
+
 function getFontSize(bloco) {
     const baseWidth = 200; //tamanho padrão do bloco
     const scaleFactor = bloco.width / baseWidth;
@@ -142,7 +194,27 @@ function loadBloco() {
     if (savedBloco) {
         try {
             const blocoData = JSON.parse(savedBloco);
-            blocos = blocoData.map(p => new Bloco(p.x, p.y, p.title, p.content, p.color, p.font));
+            blocos = [];
+
+            for (let item of blocoData) {
+                if (item.type === 'imagem') {
+                    blocos.push(new ImagemBloco(item.x, item.y, item.base64Data, item.width, item.height));
+                    } else {
+                        let novoBlocoTexto= new Bloco(
+                            item.x, 
+                            item.y, 
+                            item.title, 
+                            item.content, 
+                            item.color, 
+                            item.font
+                        );
+
+                        if (item.width) novoBlocoTexto.width = item.width;
+                        if (item.height) novoBlocoTexto.height = item.height;
+                        blocos.push(novoBlocoTexto);
+                }
+            }
+            
         } catch (e) {
             console.log("Erro ao carregar blocos:", e);
             blocos = [];
@@ -164,14 +236,30 @@ function loadBloco() {
     
 
 function saveBloco() {
-    const blocoData = blocos.map(p => ({
-        x: p.x,
-        y: p.y,
-        title: p.title,
-        content: p.content,
-        color: p.color,
-        font: p.font
-    }));
+    const blocoData = blocos.map(p => {
+        if (p.type === 'imagem') {
+            return {
+                type: 'imagem',
+                x: p.x,
+                y: p.y,
+                width: p.width,
+                height: p.height,
+                base64Data: p.base64Data
+            };
+
+        } else {
+            return {
+                x: p.x,
+                y: p.y,
+                width: p.width,
+                height: p.height,
+                title: p.title,
+                content: p.content,
+                color: p.color,
+                font: p.font
+            };
+        }
+    });
 
     localStorage.setItem('muralBloco', JSON.stringify(blocoData));
 }
@@ -209,12 +297,31 @@ function render() {
     }
 
     blocos.forEach(bloco => {
-        const fontSize = getFontSize(bloco);
-        const titleSize = fontSize + 2;
-        const contentSize = fontSize;
 
-        ctx.fillStyle = bloco.color;
-        ctx.fillRect(bloco.x, bloco.y, bloco.width, bloco.height);
+        if (bloco.type === 'imagem') {
+            if (bloco.imgElement.complete && bloco.imgElement.src) {
+                ctx.drawImage(
+                    bloco.imgElement,
+                    bloco.x,
+                    bloco.y,
+                    bloco.width,
+                    bloco.height
+                );
+
+            } else {
+                ctx.fillStyle = "#e8e8e0";
+                ctx.fillRect(bloco.x, bloco.y, bloco.width, bloco.height);
+            }
+        }
+
+        else {
+
+            const fontSize = getFontSize(bloco);
+            const titleSize = fontSize + 2;
+            const contentSize = fontSize;
+
+            ctx.fillStyle = bloco.color;
+            ctx.fillRect(bloco.x, bloco.y, bloco.width, bloco.height);
 
         ctx.fillStyle = "#333";
         
@@ -238,6 +345,8 @@ function render() {
             contentSize + 4
         );
 
+    }
+
         /* botão de fechar */
         ctx.beginPath();
         ctx.arc(bloco.x + bloco.width - 15, bloco.y + 15, 8, 0, Math.PI * 2);
@@ -251,15 +360,11 @@ function render() {
 
     ctx.fillStyle = "transparent";
     ctx.fillRect(
-        bloco.x + bloco.width - 10,
-        bloco.y + bloco.height - 10,
-        10,
-        10
-    );
-});
-
+        bloco.x + bloco.width - 15,
+        bloco.y + bloco.height - 15,
+        15, 15);
+    });
 }
-
 
     /* EVENT LISTENERS 
     (interações com o mouse) */
