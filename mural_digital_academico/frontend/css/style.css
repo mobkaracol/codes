@@ -1,118 +1,132 @@
+/* ==================================================
+   TELA DE LOGIN
+   Refatorada para o design system (global.css): Poppins,
+   cor de destaque lilás e suporte ao tema escuro.
+   Corrige os bugs antigos: botao "Entrar" e rodape ficavam
+   brancos sobre fundo claro (texto invisivel).
+   ================================================== */
 
 body{
     background: var(--bg-body);
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    transition: background 0.4s ease;
+    color: var(--text-main);
+    font-family: 'Poppins', -apple-system, 'Segoe UI', sans-serif;
+    transition: background 0.4s ease, color 0.4s ease;
 }
 
 #Background{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 24px;
 }
-
 
 #container{
-    background-color:var(--bg-canvas);
-    box-shadow: 0px 0px 7px 3px var(--shadow-canvas);
-    border-radius: 20px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    border-radius: var(--radius-lg);
     width: 470px;
-    padding: 25px;
-    height: 600px; 
-}
-
-.form{
+    max-width: 92vw;
+    padding: 44px 38px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    transition: background 0.4s ease, border-color 0.4s ease;
 }
 
-.form2{
+.login-text{
+    font-size: 30px;
+    font-weight: 700;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--text-main);
 }
 
 #container2{
-    display: block;
-    align-items: center;
-    margin-top: 150px;
-    margin-left: 45px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
 }
 
-#container3{
+.form,
+.form2{
     display: flex;
-    justify-content: flex;
-    width: 655px;    
-    margin-top: 5px;   
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form2{
+    margin-top: 18px;
+}
+
+.form label,
+.form2 label{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 input{
     width: 100%;
-    border: 2px solid var(--text-main);
-    padding: 10px 15px;
-    border-radius: 7px;
-    font-size: 18px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    background: white;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--text-main);
-  box-shadow: 0 0 5px var(--text-main);
-}
-
-#password{
-    width: 325px;
+    border: 2px solid var(--border);
+    padding: 13px 16px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 16px;
+    background: var(--bg-input);
     color: var(--text-main);
-
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-#user{
-    width: 325px;
-    color: var(--text-main);
+input::placeholder{
+    color: var(--text-muted);
+}
+
+input:focus{
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+#container3{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 26px;
 }
 
 .button{
-    border-radius: 5px;
-    width: 60px;
-    height: 35px;
-    color: var(--text-main);
-    border-color: var(--text-main);
-    background-color: var(--bg-sidebar);
-    margin-left: 310px;
+    min-width: 120px;
+    height: 46px;
+    padding: 0 22px;
+    border-radius: var(--radius);
     border: none;
-    font-size: medium;
-    margin-top: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-on-accent);
+    background-color: var(--accent);
+    transition: background-color var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .button:hover{
-    color: var(--text-hover);
-    background-color: var(--bg-hover);
-    outline: none;
-    border-color: var(--text-main);
-    box-shadow: 0 0 5px var(--text-main);
-    border: none;
+    background-color: var(--accent-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.button:active{
+    transform: translateY(0);
 }
 
 footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--bg-sidebar);
-    margin-top: 125px;
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.login-text{
-    font-size: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color:var(--text-main);
-    margin-top: 15px;
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: 36px;
+    font-size: 13px;
 }

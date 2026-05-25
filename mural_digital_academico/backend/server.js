@@ -59,28 +59,55 @@ const server = http.createServer((req, res) => {
     // Log da requisição no console
     console.log(`${req.method} ${req.url}`);
 
-    // ===== DETERMINAR ARQUIVO A SER SERVIDO =====
-    let filePath = './frontend' + req.url;
-    // Se a URL for apenas '/', serve o index.html
-    if (filePath === './frontend') {
-        filePath = './frontend/index.html';
+    // ===== NORMALIZAR A URL =====
+    // Remove a query string (?a=b) e decodifica caracteres especiais (%20 etc.)
+    let urlPath = decodeURIComponent(req.url.split('?')[0]);
+
+    // ===== DETERMINAR DIRETÓRIO BASE E ARQUIVO =====
+    // A pasta "images" fica fora de /frontend, então tem sua própria base;
+    // todo o resto é servido a partir de /frontend.
+    let baseDir;
+    let filePath;
+    if (urlPath === '/' || urlPath === '') {
+        baseDir = path.resolve('./frontend');
+        filePath = path.join(baseDir, 'index.html');
+    } else if (urlPath.startsWith('/images/')) {
+        baseDir = path.resolve('./images');
+        filePath = path.join(baseDir, urlPath.replace('/images/', ''));
+    } else {
+        baseDir = path.resolve('./frontend');
+        filePath = path.join(baseDir, urlPath);
+    }
+
+    // ===== PROTEÇÃO CONTRA PATH TRAVERSAL =====
+    // Garante que o caminho resolvido permaneça dentro do diretório base
+    // (impede acessar, por ex., backend/users.json via "/../backend/...").
+    const resolved = path.resolve(filePath);
+    if (resolved !== baseDir && !resolved.startsWith(baseDir + path.sep)) {
+        res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end('<h1>403 - Acesso negado</h1>', 'utf-8');
+        return;
     }
 
     // ===== OBTER TIPO MIME DO ARQUIVO =====
     const extname = String(path.extname(filePath)).toLowerCase();
-    const contentType = mimeTypes[extname] || 'application/octet-stream';
+    let contentType = mimeTypes[extname] || 'application/octet-stream';
+    // Acentos só aparecem corretos se o charset for declarado nos arquivos de texto
+    if (/^(text\/|application\/(json|javascript))/.test(contentType)) {
+        contentType += '; charset=utf-8';
+    }
 
     // ===== LER E SERVIR O ARQUIVO =====
     fs.readFile(filePath, (error, content) => {
         if (error) {
             // ===== TRATAMENTO DE ERROS =====
-            if (error.code === 'ENOENT') {
+            if (error.code === 'ENOENT' || error.code === 'EISDIR') {
                 // Arquivo não encontrado (404)
-                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end('<h1>404 - Página não encontrada</h1>', 'utf-8');
             } else {
                 // Erro no servidor (500)
-                res.writeHead(500);
+                res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end(`Erro no servidor: ${error.code}`, 'utf-8');
             }
         } else {

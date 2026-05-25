@@ -9,6 +9,13 @@
 </head>
 <body>
 
+    <!-- aplica o tema salvo antes da renderizacao (evita flash) -->
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+        }
+    </script>
+
     <!-- TELA DE LOGIN DO USUÁRIO
         Alunos, professores e pessoas da escola no geral
         poderão fazer criar perfis para terem acesso ao Mural Digital.

@@ -18,7 +18,11 @@
 
         <!-- sidebar header -->
         <header class="sidebar-header">
-            <button class="toggler sidebar-toggler">
+            <a href="index.html" class="sidebar-brand">
+                <span class="material-symbols-outlined brand-icon">dashboard</span>
+                <span class="brand-text">Feli's Box</span>
+            </a>
+            <button class="toggler sidebar-toggler" aria-label="Recolher menu">
                 <span class="material-symbols-outlined">chevron_left</span>
             </button>
         </header>
@@ -38,7 +42,7 @@
             <li class="nav-item">
                 <div class="input-div">
                 <a class="nav-link">
-                    <input type="file" class="file" accept="image/png, image/jpg, image/jpeg">
+                    <input type="file" class="file" accept="image/*" aria-label="Adicionar imagem ao mural">
                     <span class="nav-icon material-symbols-outlined">image</span>
                     <span class="nav-label">Imagens</span>
                 </a>

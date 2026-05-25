@@ -13,6 +13,13 @@
 </head>
 <body>
 
+    <!-- aplica o tema salvo antes da renderizacao (evita flash) -->
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+        }
+    </script>
+
     <div id="sidebar-container"></div>
     <script src="scripts/sidebar.js"></script>
 
@@ -25,6 +32,11 @@
                 DE BLOCOS DE TEXTO -->
 
     <main>
+
+        <!-- Botao para fechar a criacao e voltar ao mural -->
+        <a href="index.html" class="botao_fechar" title="Voltar ao mural" aria-label="Voltar ao mural">
+            <span class="material-symbols-outlined">close</span>
+        </a>
 
         <div class="container_criacao">
             <div class="formulario_criacao">
@@ -69,8 +81,8 @@
                             <label for="cor">Cor do Bloco</label>
                             <div class="opcao_cores">
 
-                            <input type="radio" id="cor1" name="cor" value="#8b8bee" checked>
-                            <label for="cor1" class="cor_label" 
+                            <input type="radio" id="cor1" name="cor" value="#bb9cd9" checked>
+                            <label for="cor1" class="cor_label"
                             style="background-color: #bb9cd9;"></label>
 
                             <input type="radio" id="cor2" name="cor" value="#f58cc2">
@@ -81,12 +93,12 @@
                             <label for="cor3" class="cor_label" 
                             style="background-color: #e47f8f;"></label>
 
-                            <input type="radio" id="cor4" name="cor" value="#fad15f">
-                            <label for="cor4" class="cor_label" 
+                            <input type="radio" id="cor4" name="cor" value="#fab75f">
+                            <label for="cor4" class="cor_label"
                             style="background-color: #fab75f;"></label>
 
-                            <input type="radio" id="cor5" name="cor" value="#e9d395">
-                            <label for="cor5" class="cor_label" 
+                            <input type="radio" id="cor5" name="cor" value="#f7e1a7">
+                            <label for="cor5" class="cor_label"
                             style="background-color: #f7e1a7;"></label>
 
                             <input type="radio" id="cor6" name="cor" value="#b3de8e">

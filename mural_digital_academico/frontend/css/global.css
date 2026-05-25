@@ -1,35 +1,100 @@
+/* ==================================================
+   DESIGN SYSTEM — Feli's Box
+   Paleta, tokens e estilos base compartilhados por
+   todas as paginas. Tema claro e escuro via body.dark
+   ================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 *{
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-:root {
-    --bg-body: rgb(230, 221, 219);
-    --bg-sidebar: rgb(97, 95, 109);
-    --bg-hover: rgb(115, 112, 135);
-    --bg-button: rgb(212, 211, 226);
-    --bg-canvas: rgb(250, 247, 247);
-    --bg-card: rgb(214, 197, 197);
+:root{
+    /* ----- cor de destaque ----- */
+    --accent: #6c5ce7;
+    --accent-hover: #5a4bd4;
+    --accent-soft: rgba(108, 92, 231, 0.12);
 
-    --text: rgb(206, 103, 103);
-    --text-main: rgb(22, 21, 43);
-    --text-hover: rgb(208, 207, 224);
+    /* ----- superficies ----- */
+    --bg-body: #f1eefb;
+    --bg-surface: #ffffff;
+    --bg-sidebar: #ffffff;
+    --bg-elev: #faf9ff;
+    --bg-canvas: #ffffff;
+    --bg-input: #ffffff;
+    --bg-card: #ffffff;
 
-    --shadow: rgb(186, 181, 206);
-    --shadow-canvas: rgb(207, 196, 192);
+    /* ----- texto ----- */
+    --text-main: #2c2a3b;
+    --text-muted: #6c6980;
+    --text-on-accent: #ffffff;
+
+    --border: #e7e3f3;
+
+    /* ----- tokens ----- */
+    --radius: 14px;
+    --radius-lg: 22px;
+    --radius-pill: 999px;
+    --transition: 0.25s ease;
+    --shadow-soft: 0 6px 20px rgba(60, 50, 110, 0.10);
+    --shadow-hover: 0 12px 30px rgba(60, 50, 110, 0.18);
+
+    /* ----- aliases (compatibilidade com nomes antigos) ----- */
+    --bg-hover: var(--accent-soft);
+    --bg-button: var(--bg-elev);
+    --text-hover: var(--text-on-accent);
+    --text: var(--accent);
+    --shadow: rgba(108, 92, 231, 0.25);
+    --shadow-canvas: rgba(60, 50, 110, 0.12);
 }
 
 body.dark{
-    --bg-body: rgb(125, 125, 172);
-    --bg-sidebar: rgb(42, 41, 59);
-    --bg-hover: rgb(99, 99, 134);
-    --bg-button: rgb(211, 214, 226);
-    --bg-canvas: rgb(247, 247, 250);
+    --accent: #8b7bff;
+    --accent-hover: #9d8fff;
+    --accent-soft: rgba(139, 123, 255, 0.16);
 
-    --text-main: rgb(14, 15, 18);
-    --text-hover: rgb(207, 207, 224);
+    --bg-body: #14131c;
+    --bg-surface: #201e2b;
+    --bg-sidebar: #1a1925;
+    --bg-elev: #262433;
+    --bg-canvas: #1d1b27;
+    --bg-input: #2a2838;
+    --bg-card: #201e2b;
 
-    --shadow: rgb(182, 181, 206);
-    --shadow-canvas: rgb(21, 22, 25);
+    --text-main: #ece9f7;
+    --text-muted: #a8a4be;
+
+    --border: #322f42;
+
+    --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.40);
+    --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.55);
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-canvas: rgba(0, 0, 0, 0.45);
+}
+
+body{
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text-main);
+    background: var(--bg-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* deixa os icones do Material com alinhamento agradavel */
+.material-symbols-outlined{
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* respeita quem prefere menos animacao */
+@media (prefers-reduced-motion: reduce){
+    *{
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
 }
