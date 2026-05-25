@@ -1,372 +1,132 @@
-/* ── Mensagem de sucesso ───────────────────────────────── */
-.success-msg {
-    background: #e7f7ea;
-    color: #155724;
-    border: 1px solid #b8e7c1;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+/* ==================================================
+   TELA DE LOGIN
+   Refatorada para o design system (global.css): Poppins,
+   cor de destaque lilás e suporte ao tema escuro.
+   Corrige os bugs antigos: botao "Entrar" e rodape ficavam
+   brancos sobre fundo claro (texto invisivel).
+   ================================================== */
+
+body{
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: 'Poppins', -apple-system, 'Segoe UI', sans-serif;
+    transition: background 0.4s ease, color 0.4s ease;
 }
 
-.success-msg[hidden] {
-    display: none !important;
-}
-
-body.dark .success-msg {
-    background: #153a22;
-    color: #9ff0ba;
-    border-color: #2d6b3f;
-}
-#register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.auth-link {
-    color: var(--bg-sidebar);
-    text-decoration: none;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
-    margin-top: 2px;
-}
-
-.auth-link:hover {
-    text-decoration: underline;
-}
-
-.cadastro-card {
-    width: 440px;
-}
-/* style.css — Tela de Login */
-
-#Background {
+#Background{
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 24px;
 }
 
-/* ── Card principal ─────────────────────────────────── */
-#login-card {
-    background-color: var(--bg-canvas);
-    box-shadow: 0px 0px 18px 4px var(--shadow-canvas);
-    border-radius: 20px;
-    width: 420px;
-    padding: 40px 36px 30px;
+#container{
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    border-radius: var(--radius-lg);
+    width: 470px;
+    max-width: 92vw;
+    padding: 44px 38px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    transition: background 0.4s ease, border-color 0.4s ease;
 }
 
-/* ── Cabeçalho ──────────────────────────────────────── */
-.login-header {
+.login-text{
+    font-size: 30px;
+    font-weight: 700;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    text-align: center;
-}
-
-.login-icon {
-    font-size: 48px;
-    color: var(--bg-sidebar);
-    background: var(--bg-button);
-    border-radius: 50%;
-    padding: 12px;
-    line-height: 1;
-}
-
-.login-title {
-    font-size: 26px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    color: var(--text-main);
-    font-weight: bold;
-}
-
-.login-subtitle {
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--bg-sidebar);
-}
-
-/* ── Mensagem de erro ───────────────────────────────── */
-.error-msg {
-    background: #fde8e8;
-    color: #8b0000;
-    border: 1px solid #e9b0b0;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.error-msg[hidden] {
-    display: none !important;
-}
-
-body.dark .error-msg {
-    background: #3d1a1a;
-    color: #ffaaaa;
-    border-color: #7a3030;
-}
-
-/* ── Grupos de campo ────────────────────────────────── */
-#login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.field-label {
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    color: var(--text-main);
-}
-
-.input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-icon {
-    position: absolute;
-    left: 12px;
-    font-size: 20px;
-    color: var(--bg-sidebar);
-    pointer-events: none;
-}
-
-.field-input {
-    width: 100%;
-    border: 2px solid var(--shadow);
-    padding: 11px 44px;
-    border-radius: 9px;
-    font-size: 15px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    background: white;
-    color: var(--text-main);
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.field-input:focus {
-    outline: none;
-    border-color: var(--bg-sidebar);
-    box-shadow: 0 0 6px var(--shadow);
-}
-
-/* Botão mostrar/ocultar senha */
-.toggle-pass-btn {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--bg-sidebar);
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    border-radius: 6px;
-    transition: color 0.2s;
-}
-
-.toggle-pass-btn:hover {
-    color: var(--text-main);
-}
-
-/* ── Botão Entrar ───────────────────────────────────── */
-.btn-entrar {
-    margin-top: 6px;
-    width: 100%;
-    padding: 12px;
-    background-color: var(--bg-sidebar);
-    color: var(--text-hover);
-    border: none;
-    border-radius: 9px;
-    font-size: 16px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s;
-    display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--text-main);
+}
+
+#container2{
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+}
+
+.form,
+.form2{
+    display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
-.btn-entrar:hover:not(:disabled) {
-    background-color: var(--bg-hover);
-    box-shadow: 0 0 8px var(--shadow);
-    transform: translateY(-1px);
+.form2{
+    margin-top: 18px;
 }
 
-.btn-entrar:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
+.form label,
+.form2 label{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
-/* Spinner de carregamento */
-.spinner {
-    width: 18px;
-    height: 18px;
-    border: 3px solid rgba(255,255,255,0.4);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-}
-
-.spinner[hidden] {
-    display: none !important;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ── Rodapé ─────────────────────────────────────────── */
-.login-footer {
-    text-align: center;
-    font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--bg-sidebar);
-    padding-top: 8px;
-    border-top: 1px solid var(--shadow);
-}
-
-/* ── Responsividade ─────────────────────────────────── */
-@media (max-width: 900px) {
-    body.login-page .sidebar {
-        margin: 16px;
-        height: auto;
-    }
-
-    #Background {
-        padding: 16px;
-    }
-}
-
-@media (max-width: 640px) {
-    body.login-page .sidebar {
-        display: none;
-    }
-
-    #login-card {
-        width: 100%;
-        max-width: 430px;
-        padding: 26px 20px 20px;
-        border-radius: 16px;
-        gap: 18px;
-    }
-
-    .cadastro-card {
-        width: 100%;
-        max-width: 430px;
-    }
-
-    .login-title {
-        font-size: 22px;
-    }
-
-    .login-subtitle {
-        font-size: 13px;
-    }
-
-    .field-input {
-        font-size: 14px;
-        padding: 10px 40px;
-    }
-
-    .btn-entrar {
-        padding: 11px;
-    }
-
-    .login-footer {
-        font-size: 11px;
-        line-height: 1.4;
-    }
-}
-
-/* ── Legado (mantido para não quebrar outras páginas) ── */
-#container3 {
-    display: flex;
-    justify-content: flex;
-    width: 655px;    
-    margin-top: 5px;   
-}
-
-#container input{
+input{
     width: 100%;
-    border: 2px solid var(--text-main);
-    padding: 10px 15px;
-    border-radius: 7px;
-    font-size: 18px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    background: white;
+    border: 2px solid var(--border);
+    padding: 13px 16px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 16px;
+    background: var(--bg-input);
+    color: var(--text-main);
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-#container input:focus {
-  outline: none;
-  border-color: var(--text-main);
-  box-shadow: 0 0 5px var(--text-main);
+input::placeholder{
+    color: var(--text-muted);
 }
 
-/* #password e #user — removidos para não conflitar com .field-input */
+input:focus{
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+#container3{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 26px;
+}
 
 .button{
-    border-radius: 5px;
-    width: 60px;
-    height: 35px;
-    color: var(--text-main);
-    border-color: var(--text-main);
-    background-color: var(--bg-sidebar);
-    margin-left: 310px;
+    min-width: 120px;
+    height: 46px;
+    padding: 0 22px;
+    border-radius: var(--radius);
     border: none;
-    font-size: medium;
-    margin-top: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-on-accent);
+    background-color: var(--accent);
+    transition: background-color var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .button:hover{
-    color: var(--text-hover);
-    background-color: var(--bg-hover);
-    outline: none;
-    border-color: var(--text-main);
-    box-shadow: 0 0 5px var(--text-main);
-    border: none;
+    background-color: var(--accent-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.button:active{
+    transform: translateY(0);
 }
 
 footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--bg-sidebar);
-    margin-top: 125px;
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.login-text{
-    font-size: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color:var(--text-main);
-    margin-top: 15px;
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: 36px;
+    font-size: 13px;
 }

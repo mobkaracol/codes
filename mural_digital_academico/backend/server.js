@@ -2,262 +2,116 @@
 ╔════════════════════════════════════════════════════════════════════════╗
 ║          SERVIDOR HTTP PARA MURAL DIGITAL ACADÊMICO                    ║
 ║                                                                        ║
-║  Servidor Node.js para servir arquivos estáticos e gerenciar auth.     ║
-║  Autenticação via users.json com senhas hasheadas (SHA-256).           ║
+║  Servidor Node.js simples para servir arquivos estáticos do projeto.   ║
+║  Funciona como um servidor web local para desenvolvimento.             ║
 ║                                                                        ║
 ║  Como usar:                                                            ║
 ║  1. Certifique-se de ter Node.js instalado                             ║
-║  2. Execute: node server.js  (na pasta backend/)                       ║
+║  2. Execute: node server.js                                            ║
 ║  3. Acesse: http://localhost:3000                                      ║
-║                                                                        ║
-║  Usuários padrão:                                                      ║
-║    admin     / admin123                                                ║
-║    aluno     / aluno123                                                ║
-║    professor / prof123                                                 ║
 ╚════════════════════════════════════════════════════════════════════════╝
 */
 
 // ============================================
 // IMPORTAÇÃO DE MÓDULOS
 // ============================================
-const http   = require('http');
-const fs     = require('fs');
-const path   = require('path');
-const crypto = require('crypto');
+const http = require('http');   // Módulo HTTP do Node.js
+const fs = require('fs');        // File System para ler arquivos
+const path = require('path');    // Path para manipular caminhos
 
 // ============================================
 // CONFIGURAÇÕES DO SERVIDOR
 // ============================================
-const PORT     = 3000;
-const HOST     = 'localhost';
-const FRONTEND = path.join(__dirname, '..', 'frontend');
-const USERS_DB = path.join(__dirname, 'users.json');
+const PORT = 3000;              // Porta onde o servidor vai rodar
+const HOST = 'localhost';        // Host (127.0.0.1)
 
 // ============================================
-// SESSÕES EM MEMÓRIA
+// TIPOS MIME (Content-Type)
 // ============================================
-// Map<token, { id, username, name, role, createdAt }>
-const sessions = new Map();
-
-// ============================================
-// HELPERS
-// ============================================
-function hashPassword(password) {
-    return crypto.createHash('sha256').update(password).digest('hex');
-}
-
-function generateToken() {
-    return crypto.randomBytes(32).toString('hex');
-}
-
-function loadUsers() {
-    try {
-        return JSON.parse(fs.readFileSync(USERS_DB, 'utf-8'));
-    } catch {
-        return [];
-    }
-}
-
-function saveUsers(users) {
-    fs.writeFileSync(USERS_DB, JSON.stringify(users, null, 2), 'utf-8');
-}
-
-function sendJSON(res, statusCode, data) {
-    const body = JSON.stringify(data);
-    res.writeHead(statusCode, {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-    });
-    res.end(body);
-}
-
-function readBody(req) {
-    return new Promise((resolve, reject) => {
-        let body = '';
-        req.on('data', chunk => { body += chunk.toString(); });
-        req.on('end', () => {
-            try { resolve(JSON.parse(body || '{}')); }
-            catch { reject(new Error('JSON inválido')); }
-        });
-        req.on('error', reject);
-    });
-}
-
-// ============================================
-// TIPOS MIME
-// ============================================
+/**
+ * Mapeia extensões de arquivos para seus tipos MIME corretos.
+ * Necessário para que o navegador interprete os arquivos adequadamente.
+ */
 const mimeTypes = {
     '.html': 'text/html',
-    '.css':  'text/css',
-    '.js':   'text/javascript',
+    '.css': 'text/css',
+    '.js': 'text/javascript',
     '.json': 'application/json',
-    '.png':  'image/png',
-    '.jpg':  'image/jpeg',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
-    '.gif':  'image/gif',
-    '.svg':  'image/svg+xml',
-    '.ico':  'image/x-icon'
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon'
 };
-
-// ============================================
-// ROTEADOR DE API
-// ============================================
-async function handleAPI(req, res) {
-    const url = req.url.split('?')[0];
-
-    // ----- POST /api/register -----
-    if (url === '/api/register' && req.method === 'POST') {
-        let body;
-        try { body = await readBody(req); }
-        catch { return sendJSON(res, 400, { error: 'Requisição inválida.' }); }
-
-        const { name, username, password } = body;
-
-        if (!name || !username || !password) {
-            return sendJSON(res, 400, { error: 'Nome, usuário e senha são obrigatórios.' });
-        }
-
-        const cleanName = String(name).trim();
-        const cleanUsername = String(username).trim().toLowerCase();
-        const cleanPassword = String(password);
-
-        if (cleanName.length < 3) {
-            return sendJSON(res, 400, { error: 'Nome deve ter pelo menos 3 caracteres.' });
-        }
-
-        if (!/^[a-z0-9._-]{3,20}$/.test(cleanUsername)) {
-            return sendJSON(res, 400, { error: 'Usuário deve ter 3 a 20 caracteres (a-z, 0-9, ., _ ou -).' });
-        }
-
-        if (cleanPassword.length < 6) {
-            return sendJSON(res, 400, { error: 'Senha deve ter pelo menos 6 caracteres.' });
-        }
-
-        const users = loadUsers();
-        const exists = users.some(u => u.username === cleanUsername);
-
-        if (exists) {
-            return sendJSON(res, 409, { error: 'Esse usuário já existe.' });
-        }
-
-        const nextId = users.length ? Math.max(...users.map(u => Number(u.id) || 0)) + 1 : 1;
-        const newUser = {
-            id: nextId,
-            username: cleanUsername,
-            name: cleanName,
-            role: 'aluno',
-            passwordHash: hashPassword(cleanPassword)
-        };
-
-        users.push(newUser);
-
-        try {
-            saveUsers(users);
-        } catch {
-            return sendJSON(res, 500, { error: 'Falha ao salvar usuário.' });
-        }
-
-        console.log(`[AUTH] Cadastro: ${newUser.username} (${newUser.role})`);
-        return sendJSON(res, 201, { ok: true, message: 'Cadastro realizado com sucesso.' });
-    }
-
-    // ----- POST /api/login -----
-    if (url === '/api/login' && req.method === 'POST') {
-        let body;
-        try { body = await readBody(req); }
-        catch { return sendJSON(res, 400, { error: 'Requisição inválida.' }); }
-
-        const { username, password } = body;
-        if (!username || !password) {
-            return sendJSON(res, 400, { error: 'Usuário e senha são obrigatórios.' });
-        }
-
-        const users = loadUsers();
-        const user  = users.find(u => u.username === username);
-
-        if (!user || user.passwordHash !== hashPassword(password)) {
-            return sendJSON(res, 401, { error: 'Usuário ou senha incorretos.' });
-        }
-
-        const token = generateToken();
-        sessions.set(token, {
-            id: user.id,
-            username: user.username,
-            name: user.name,
-            role: user.role,
-            createdAt: Date.now()
-        });
-
-        console.log(`[AUTH] Login: ${user.username} (${user.role})`);
-        return sendJSON(res, 200, { token, name: user.name, role: user.role });
-    }
-
-    // ----- POST /api/logout -----
-    if (url === '/api/logout' && req.method === 'POST') {
-        const token = (req.headers['authorization'] || '').replace('Bearer ', '');
-        if (token && sessions.has(token)) {
-            const user = sessions.get(token);
-            sessions.delete(token);
-            console.log(`[AUTH] Logout: ${user.username}`);
-        }
-        return sendJSON(res, 200, { ok: true });
-    }
-
-    // ----- GET /api/me -----
-    if (url === '/api/me' && req.method === 'GET') {
-        const token = (req.headers['authorization'] || '').replace('Bearer ', '');
-        const session = sessions.get(token);
-        if (!session) return sendJSON(res, 401, { error: 'Não autenticado.' });
-        return sendJSON(res, 200, { id: session.id, username: session.username, name: session.name, role: session.role });
-    }
-
-    // Rota de API não encontrada
-    return sendJSON(res, 404, { error: 'Rota não encontrada.' });
-}
 
 // ============================================
 // CRIAÇÃO DO SERVIDOR HTTP
 // ============================================
-const server = http.createServer(async (req, res) => {
+/**
+ * Cria servidor que processa cada requisição HTTP:
+ * - Determina qual arquivo servir baseado na URL
+ * - Lê o arquivo do sistema
+ * - Envia o conteúdo com o Content-Type correto
+ * - Trata erros 404 (não encontrado) e 500 (erro do servidor)
+ */
+const server = http.createServer((req, res) => {
+    // Log da requisição no console
     console.log(`${req.method} ${req.url}`);
 
-    // Preflight CORS
-    if (req.method === 'OPTIONS') {
-        res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Authorization,Content-Type', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS' });
-        return res.end();
+    // ===== NORMALIZAR A URL =====
+    // Remove a query string (?a=b) e decodifica caracteres especiais (%20 etc.)
+    let urlPath = decodeURIComponent(req.url.split('?')[0]);
+
+    // ===== DETERMINAR DIRETÓRIO BASE E ARQUIVO =====
+    // A pasta "images" fica fora de /frontend, então tem sua própria base;
+    // todo o resto é servido a partir de /frontend.
+    let baseDir;
+    let filePath;
+    if (urlPath === '/' || urlPath === '') {
+        baseDir = path.resolve('./frontend');
+        filePath = path.join(baseDir, 'index.html');
+    } else if (urlPath.startsWith('/images/')) {
+        baseDir = path.resolve('./images');
+        filePath = path.join(baseDir, urlPath.replace('/images/', ''));
+    } else {
+        baseDir = path.resolve('./frontend');
+        filePath = path.join(baseDir, urlPath);
     }
 
-    // Rotas de API
-    if (req.url.startsWith('/api/')) {
-        return handleAPI(req, res);
+    // ===== PROTEÇÃO CONTRA PATH TRAVERSAL =====
+    // Garante que o caminho resolvido permaneça dentro do diretório base
+    // (impede acessar, por ex., backend/users.json via "/../backend/...").
+    const resolved = path.resolve(filePath);
+    if (resolved !== baseDir && !resolved.startsWith(baseDir + path.sep)) {
+        res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end('<h1>403 - Acesso negado</h1>', 'utf-8');
+        return;
     }
 
-    // Arquivos estáticos (frontend)
-    let urlPath = req.url.split('?')[0];
-    if (urlPath === '/') urlPath = '/index.html';
-
-    const filePath   = path.join(FRONTEND, urlPath);
-    const safeFront  = path.resolve(FRONTEND);
-
-    // Proteção contra path traversal
-    if (!path.resolve(filePath).startsWith(safeFront)) {
-        res.writeHead(403, { 'Content-Type': 'text/plain' });
-        return res.end('Forbidden');
+    // ===== OBTER TIPO MIME DO ARQUIVO =====
+    const extname = String(path.extname(filePath)).toLowerCase();
+    let contentType = mimeTypes[extname] || 'application/octet-stream';
+    // Acentos só aparecem corretos se o charset for declarado nos arquivos de texto
+    if (/^(text\/|application\/(json|javascript))/.test(contentType)) {
+        contentType += '; charset=utf-8';
     }
 
-    const extname    = path.extname(filePath).toLowerCase();
-    const contentType = mimeTypes[extname] || 'application/octet-stream';
-
+    // ===== LER E SERVIR O ARQUIVO =====
     fs.readFile(filePath, (error, content) => {
         if (error) {
-            if (error.code === 'ENOENT') {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
+            // ===== TRATAMENTO DE ERROS =====
+            if (error.code === 'ENOENT' || error.code === 'EISDIR') {
+                // Arquivo não encontrado (404)
+                res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end('<h1>404 - Página não encontrada</h1>', 'utf-8');
             } else {
-                res.writeHead(500);
+                // Erro no servidor (500)
+                res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end(`Erro no servidor: ${error.code}`, 'utf-8');
             }
         } else {
+            // ===== SUCESSO - ENVIAR ARQUIVO =====
             res.writeHead(200, { 'Content-Type': contentType });
             res.end(content, 'utf-8');
         }
@@ -267,6 +121,9 @@ const server = http.createServer(async (req, res) => {
 // ============================================
 // INICIALIZAÇÃO DO SERVIDOR
 // ============================================
+/**
+ * Inicia o servidor e exibe informações no console
+ */
 server.listen(PORT, HOST, () => {
     console.log('╔════════════════════════════════════════════╗');
     console.log('║   Mural Digital Acadêmico - Servidor      ║');
