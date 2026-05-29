@@ -1,439 +1,234 @@
-# 📌 Mural Digital Acadêmico
+# 📌 Feli's Box — Mural Digital Acadêmico
 
-Um sistema interativo de mural digital para ambiente acadêmico, desenvolvido com HTML5 Canvas, CSS3 e JavaScript vanilla. Permite criar, visualizar, organizar e remover posts em um mural virtual com interface moderna de dashboard.
+**Feli's Box** é um mural digital interativo voltado para o ambiente acadêmico. Ele funciona como um quadro de avisos virtual onde alunos, professores e secretaria podem criar blocos de texto coloridos e enviar imagens, arrastando e redimensionando tudo livremente em uma área de trabalho (canvas). O acesso é protegido por login.
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-1.0.0-blue)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-6-blue)
+![Stack](https://img.shields.io/badge/stack-PHP%20%2B%20MySQL%20%2B%20Canvas-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+> Projeto acadêmico — Centro Paula Souza · Alfredo dos Barros Santos · 2026
+
+---
 
 ## 📋 Índice
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Como Executar](#como-executar)
-- [Como Usar](#como-usar)
-- [Arquitetura](#arquitetura)
-- [Contribuindo](#contribuindo)
+- [Sobre o Projeto](#-sobre-o-projeto)
+- [Funcionalidades](#-funcionalidades)
+- [Tech Stack](#-tech-stack)
+- [Como Funciona](#-como-funciona)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Instalação](#-instalação)
+- [Como Usar](#-como-usar)
+- [Notas e Limitações Conhecidas](#-notas-e-limitações-conhecidas)
+- [Contribuindo](#-contribuindo)
+- [Licença](#-licença)
 
 ---
 
 ## 🎯 Sobre o Projeto
 
-O **Mural Digital Acadêmico** é uma aplicação web que simula um mural físico de avisos, mas com recursos digitais interativos. Ideal para escolas, universidades ou qualquer ambiente que necessite de um sistema de comunicação visual e organizado.
+O Feli's Box simula um mural físico de avisos, mas com recursos digitais interativos. A ideia é facilitar a comunicação dentro do ambiente educacional: cada usuário autenticado pode publicar pequenos blocos (notas) e imagens no mural e organizá-los livremente na tela.
 
-### Características Principais:
-
-- ✨ Interface moderna com design de dashboard
-- 🎨 8 cores diferentes para personalização de posts
-- 🖱️ Sistema de arrastar e soltar (drag & drop)
-- 💾 Persistência de dados com localStorage
-- 📱 Preview em tempo real ao criar posts
-- 🔄 Atualização instantânea do mural
-- ⚡ Zero dependências externas
+Diferente de versões anteriores (que eram apenas HTML/CSS/JS estático), esta versão tem um **backend em PHP com banco de dados MySQL** para autenticação de usuários e um fluxo de **upload de imagens** no servidor. O mural em si é renderizado em um **canvas HTML5**, com arrastar e soltar, redimensionamento, tema claro/escuro e persistência local.
 
 ---
 
 ## ⚙️ Funcionalidades
 
-### 1. Criar Posts
-- Formulário intuitivo com validação
-- Título (máximo 30 caracteres)
-- Conteúdo (máximo 200 caracteres)
-- Seleção de 8 cores personalizadas
-- Preview em tempo real
-- Contador de caracteres
-
-### 2. Visualizar Mural
-- Posts exibidos em canvas HTML5
-- Design visual atraente com sombras
-- Botão de fechar em cada post
-- Mensagem quando vazio
-
-### 3. Organizar Posts
-- Arrastar e soltar posts livremente
-- Reorganizar posição conforme necessidade
-- Posts se movem para frente ao serem clicados
-- Limitação automática aos limites do canvas
-
-### 4. Remover Posts
-- Botão X vermelho em cada post
-- Confirmação visual ao passar o mouse
-- Remoção instantânea
-
-### 5. Persistência
-- Salva automaticamente no localStorage
-- Posts mantidos entre sessões
-- Não perde dados ao fechar navegador
+- 🔐 **Login com sessão PHP** — o mural e as páginas internas só são acessíveis após autenticação (guarda de rota em `frontend/auth.php`).
+- 📝 **Criação de blocos de texto** — título (até 50 caracteres), conteúdo (até 200), escolha de cor e prévia em tempo real.
+- 🖼️ **Upload de imagens** — envio de PNG/JPG/JPEG; a imagem vira um bloco no mural, dimensionado automaticamente pela proporção original.
+- 🖱️ **Arrastar, soltar e redimensionar** — todos os blocos podem ser movidos e redimensionados no canvas, com limites dentro da área visível.
+- ❌ **Remover blocos** — botão de fechar (×) em cada bloco.
+- 🌓 **Tema claro/escuro** — preferência salva no `localStorage`.
+- 📱 **Sidebar responsiva** — colapsável em telas menores.
+- 💾 **Persistência local** — os blocos do mural são salvos no `localStorage` do navegador.
+- ℹ️ **Página "Sobre Nós"** — apresenta o projeto e a equipe.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tech Stack
 
-- **HTML5** - Estrutura e Canvas API
-- **CSS3** - Estilização e animações
-- **JavaScript (ES6+)** - Lógica e interatividade
-- **Node.js** - Servidor HTTP (opcional)
-- **localStorage** - Persistência de dados
+**Frontend**
+- HTML5 + **Canvas 2D API** (renderização do mural)
+- CSS3 (temas, layout responsivo)
+- JavaScript (ES6+, vanilla — sem frameworks)
+- [Material Symbols](https://fonts.google.com/icons) (ícones)
+- Web Storage API (`localStorage`)
 
-### APIs Utilizadas:
-- Canvas 2D API
-- Web Storage API (localStorage)
-- DOM Events API
+**Backend**
+- **PHP** (sessões, autenticação, upload de arquivos)
+- **MySQL** via `mysqli` com *prepared statements*
+- Apache (ex.: via XAMPP / WAMP / Laragon)
+
+**Extras**
+- `backend/server.js` — servidor Node.js estático **legado/opcional**, mantido apenas para servir arquivos estáticos. ⚠️ Ele **não interpreta PHP**, então o login e o upload não funcionam por ele. Para o app completo, use um servidor com PHP (ver [Instalação](#-instalação)).
+
+---
+
+## 🔧 Como Funciona
+
+```
+┌────────────────┐   credenciais    ┌──────────────────┐   consulta      ┌─────────────┐
+│   index.php    │ ───────────────► │ backend/Login.php│ ──────────────► │   MySQL     │
+│ (tela de login)│                  │  (valida sessão) │   tblUsuario    │  (mural)    │
+└────────────────┘                  └────────┬─────────┘                 └─────────────┘
+                                             │ sessão OK
+                                             ▼
+                                  ┌────────────────────────┐
+                                  │  frontend/index.php     │
+                                  │  (mural em canvas)      │
+                                  │  auth.php protege a rota │
+                                  └───────┬─────────────────┘
+                       cria nota │        │ envia imagem
+                                 ▼        ▼
+                   frontend/criacao.php   upload.php ──► uploads/ ──► ?img= ──► bloco de imagem
+                          │                                              no canvas
+                          ▼
+                   localStorage (muralBloco)  ◄── blocos de texto/imagem persistidos no navegador
+```
+
+1. **Autenticação** — o usuário entra em `index.php`, envia o formulário para `backend/Login.php`, que valida nome/senha na tabela `tblUsuario` e cria a sessão.
+2. **Mural** — após o login, `frontend/index.php` carrega o canvas e os blocos salvos. Toda página interna inclui `frontend/auth.php`, que redireciona de volta ao login se não houver sessão.
+3. **Criação de notas** — `frontend/criacao.php` monta o bloco e o grava no `localStorage`, depois retorna ao mural.
+4. **Upload de imagens** — a sidebar envia o arquivo para `upload.php`, que move a imagem para `uploads/` e volta ao mural com `?img=`, transformando-a em um bloco.
+
+> ℹ️ **Importante:** apenas os **usuários** ficam no banco MySQL. Os **blocos do mural** (texto e referências de imagem) são guardados no `localStorage` do navegador, ou seja, são por dispositivo/navegador.
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-mural digital academico/
+codes/
 │
-├── index.html          # Página principal (mural)
-├── criacao.html        # Página de criação de posts
-├── script.js           # Lógica do mural (canvas, drag & drop)
-├── style.css           # Estilos completos do projeto
-├── server.js           # Servidor Node.js (opcional)
-├── README.md           # Documentação do projeto
+├── index.php               # Tela de login (raiz da aplicação)
+├── upload.php              # Recebe o upload de imagem e move para /uploads
+├── teste.html             # Página de teste isolada do formulário de upload
+├── Banco de dados.txt     # Script SQL do banco (criação da tabela de usuários)
 │
-└── imagens/            # Ícones da interface
-    ├── icone_pessoa.png
-    ├── icone_anuncios.png
-    ├── icone_lapis.png
-    └── icone_config.png
+├── backend/
+│   ├── conexao.php        # Conexão MySQL (mysqli)
+│   ├── Login.php          # Valida credenciais e inicia a sessão
+│   ├── Logout.php         # Encerra a sessão
+│   ├── sessao.php         # Endpoint JSON: informa se há usuário logado
+│   └── server.js          # Servidor Node.js estático (legado/opcional)
+│
+├── frontend/
+│   ├── auth.php           # Guarda de autenticação (incluída nas páginas internas)
+│   ├── index.php          # Mural (canvas principal)
+│   ├── criacao.php        # Página de criação de blocos
+│   ├── sobreNos.php       # Página "Sobre Nós"
+│   ├── components/
+│   │   └── sidebar.html   # Barra de navegação lateral (carregada via fetch)
+│   ├── css/
+│   │   ├── index.css      # Estilos gerais do mural
+│   │   ├── style.css      # Estilos da tela de login
+│   │   ├── criacao.css    # Estilos da página de criação
+│   │   └── aboutUs.css    # Estilos da página Sobre Nós
+│   └── scripts/
+│       ├── script.js      # Lógica do canvas (blocos, drag & drop, resize)
+│       ├── script2.js     # Lógica da página de criação (prévia, contadores)
+│       └── sidebar.js     # Sidebar, tema e sincronização de login
+│
+├── images/                # Imagens de exemplo
+└── uploads/               # Imagens enviadas pelos usuários (geradas em runtime)
 ```
-
-### Descrição dos Arquivos:
-
-#### `index.html`
-- Página principal com o canvas do mural
-- Barra de navegação
-- Importa script.js para funcionalidade
-
-#### `criacao.html`
-- Interface de criação de posts
-- Formulário com validação
-- Preview em tempo real
-- Sistema de cores
-
-#### `script.js`
-- Classe Post para representar cada post
-- Renderização no canvas
-- Sistema de drag & drop
-- Gerenciamento de eventos do mouse
-- Persistência com localStorage
-- Funções de carregar e salvar
-
-#### `style.css`
-- Reset CSS e estilos globais
-- Estilos do menu de navegação
-- Estilos do canvas
-- Estilos da página de criação
-- Componentes (botões, formulários, preview)
-- Animações e transições
-- Responsividade
-
-#### `server.js`
-- Servidor HTTP simples
-- Serve arquivos estáticos
-- Configuração de MIME types
-- Tratamento de erros 404/500
 
 ---
 
-## 🚀 Como Executar
+## 🚀 Instalação
 
-### Opção 1: Abrir Diretamente no Navegador
+A aplicação precisa de um ambiente com **PHP** e **MySQL**. A forma mais simples é usar o [XAMPP](https://www.apachefriends.org/) (Apache + PHP + MySQL/MariaDB).
 
-**Mais Simples - Recomendado para testes rápidos**
+### Pré-requisitos
+- PHP 7.4+ (com a extensão `mysqli`)
+- MySQL ou MariaDB
+- Um servidor web (Apache, via XAMPP/WAMP/Laragon)
 
-1. Navegue até a pasta do projeto
-2. Clique duas vezes em `index.html`
-3. Ou arraste o arquivo para o navegador
+### Passo a passo
 
-```powershell
-# No PowerShell
-cd "c:\Users\USUARIO\Documents\codes\mural digital academico"
-start index.html
-```
+1. **Coloque o projeto na pasta do servidor**
 
-### Opção 2: Usando Servidor Node.js
+   Copie a pasta do projeto para o diretório web do Apache. No XAMPP (Windows), normalmente:
+   ```
+   C:\xampp\htdocs\Mural\
+   ```
+   > O nome da pasta (`Mural`) define a URL: `http://localhost/Mural/`.
 
-**Mais Profissional - Recomendado para desenvolvimento**
+2. **Inicie o Apache e o MySQL**
 
-#### Pré-requisitos:
-- Node.js instalado ([Download aqui](https://nodejs.org/))
+   Pelo painel de controle do XAMPP, ligue **Apache** e **MySQL**.
 
-#### Passos:
+3. **Crie o banco de dados**
 
-1. **Abra o terminal na pasta do projeto:**
-```powershell
-cd "c:\Users\USUARIO\Documents\codes\mural digital academico"
-```
+   Abra o phpMyAdmin (`http://localhost/phpmyadmin`) e execute o script de `Banco de dados.txt`:
+   ```sql
+   CREATE DATABASE mural;
+   USE mural;
 
-2. **Inicie o servidor:**
-```powershell
-node server.js
-```
+   CREATE TABLE tblUsuario (
+       usuId INT AUTO_INCREMENT PRIMARY KEY,
+       usuNome VARCHAR(100) NOT NULL UNIQUE,
+       usuSenha VARCHAR(255) NOT NULL
+   );
+   ```
 
-3. **Acesse no navegador:**
-```
-http://localhost:3000
-```
+4. **Cadastre um usuário de teste**
 
-4. **Para parar o servidor:**
-Pressione `Ctrl + C` no terminal
+   Como ainda não há tela de cadastro, insira um usuário manualmente:
+   ```sql
+   INSERT INTO tblUsuario (usuNome, usuSenha) VALUES ('admin', '1234');
+   ```
 
-### Opção 3: Usando Python HTTP Server
+5. **Confira a conexão**
 
-**Alternativa se tiver Python instalado**
+   As credenciais do banco ficam em `backend/conexao.php` (padrão XAMPP):
+   ```php
+   $conn = new mysqli("localhost", "root", "", "mural");
+   ```
+   Ajuste usuário/senha se o seu MySQL for diferente.
 
-```powershell
-# Python 3
-python -m http.server 8000
-
-# Acesse: http://localhost:8000
-```
+6. **Acesse no navegador**
+   ```
+   http://localhost/Mural/index.php
+   ```
+   Faça login com o usuário cadastrado.
 
 ---
 
 ## 📖 Como Usar
 
-### Criando um Post
-
-1. **Acesse o mural** (index.html)
-2. **Clique no ícone do lápis** na barra de navegação
-3. **Preencha o formulário:**
-   - Digite um título (até 30 caracteres)
-   - Digite o conteúdo (até 200 caracteres)
-   - Escolha uma cor clicando nas opções
-4. **Visualize o preview** em tempo real à direita
-5. **Clique em "Criar Post ✓"**
-6. **Aguarde a mensagem de sucesso**
-7. **Você será redirecionado para o mural**
-
-### Organizando Posts
-
-1. **Clique e segure** em qualquer post
-2. **Arraste** para a posição desejada
-3. **Solte** para fixar na nova posição
-4. A posição é **salva automaticamente**
-
-### Removendo Posts
-
-1. **Passe o mouse** sobre um post
-2. **Clique no X vermelho** no canto superior direito
-3. O post é **removido instantaneamente**
+1. **Login** — entre com seu usuário e senha na tela inicial.
+2. **Criar uma nota** — clique em **Criação** (ícone de lápis) na sidebar, preencha título, conteúdo e cor, acompanhe a prévia e salve. Você volta ao mural com a nota nova.
+3. **Enviar uma imagem** — clique em **Imagens** na sidebar e escolha um arquivo PNG/JPG. A imagem aparece como um bloco no mural.
+4. **Organizar o mural** — arraste qualquer bloco para movê-lo; use a alça no canto inferior direito para redimensionar; clique no **×** para remover.
+5. **Tema** — alterne entre claro e escuro pelo botão **Tema**.
+6. **Sair** — o botão de login na sidebar vira **Sair** quando você está autenticado.
 
 ---
 
-## 🏗️ Arquitetura
+## ⚠️ Notas e Limitações Conhecidas
 
-### Fluxo de Dados
+Por se tratar de um projeto acadêmico, há pontos que **não devem ser usados em produção** sem ajustes:
 
-```
-┌─────────────────┐
-│  criacao.html   │
-│   (Formulário)  │
-└────────┬────────┘
-         │
-         │ Coleta dados
-         ▼
-┌─────────────────┐
-│  localStorage   │ ◄───────┐
-│   (Persistência)│         │
-└────────┬────────┘         │
-         │                  │
-         │ Carrega posts    │ Salva alterações
-         ▼                  │
-┌─────────────────┐         │
-│   script.js     │─────────┘
-│  (Lógica Canvas)│
-└────────┬────────┘
-         │
-         │ Renderiza
-         ▼
-┌─────────────────┐
-│   index.html    │
-│    (Canvas)     │
-└─────────────────┘
-```
-
-### Ciclo de Vida de um Post
-
-1. **Criação:**
-   - Usuário preenche formulário em `criacao.html`
-   - JavaScript valida os dados
-   - Cria objeto Post com posição aleatória
-   - Salva no localStorage
-   - Redireciona para index.html
-
-2. **Exibição:**
-   - `script.js` carrega posts do localStorage
-   - Cria instâncias da classe Post
-   - Renderiza no canvas com método `draw()`
-
-3. **Interação:**
-   - Event listeners detectam cliques/movimentos
-   - Atualiza posições em tempo real
-   - Re-renderiza canvas a cada frame
-
-4. **Persistência:**
-   - Salva automaticamente após cada alteração
-   - Mantém dados entre sessões
-   - Sincronização com localStorage
-
-### Estrutura de Dados
-
-```javascript
-// Estrutura de um Post no localStorage
-{
-  "x": 150,              // Posição X no canvas
-  "y": 200,              // Posição Y no canvas
-  "title": "Título",     // Título do post
-  "content": "Conteúdo", // Texto do post
-  "color": "#ffe4b5"     // Cor de fundo
-}
-
-// Array de posts salvo
-[
-  { x: 50, y: 50, title: "Post 1", content: "...", color: "#ffe4b5" },
-  { x: 300, y: 200, title: "Post 2", content: "...", color: "#e0f7fa" }
-]
-```
-
----
-
-## 🎨 Paleta de Cores
-
-O projeto utiliza 8 cores predefinidas para os posts:
-
-| Cor | Código | Uso |
-|-----|--------|-----|
-| 🟡 Bege | `#ffe4b5` | Padrão |
-| 🔵 Ciano | `#e0f7fa` | Informações |
-| 🟠 Coral | `#ffccbc` | Avisos |
-| 🟢 Verde | `#c8e6c9` | Confirmações |
-| 🔴 Rosa | `#f8bbd0` | Destaques |
-| 🟣 Roxo | `#e1bee7` | Eventos |
-| 🟡 Amarelo | `#fff9c4` | Lembretes |
-| 🟪 Lilás | `#d1c4e9` | Diversos |
-
----
-
-## 🔍 Detalhes Técnicos
-
-### Canvas Rendering
-
-O mural utiliza Canvas 2D API para renderização eficiente:
-
-```javascript
-// Cada post desenha:
-- Sombra (shadowBlur, shadowOffset)
-- Fundo colorido (fillRect)
-- Borda (strokeRect)
-- Título em negrito
-- Linha divisória
-- Conteúdo com quebra de linha
-- Botão X para fechar
-```
-
-### Event Handling
-
-Sistema de eventos para interatividade:
-
-```javascript
-mousedown  → Inicia arrasto ou remove post
-mousemove  → Atualiza posição durante arrasto
-mouseup    → Finaliza arrasto e salva
-mouseleave → Cancela arrasto se sair do canvas
-```
-
-### Performance
-
-- Renderização apenas quando necessário
-- Limitação de posts dentro do canvas
-- Delegação de eventos eficiente
-- Cache de medidas de texto
-
----
-
-## 🐛 Solução de Problemas
-
-### Posts não aparecem
-- Verifique o console do navegador (F12)
-- Limpe o localStorage: `localStorage.clear()`
-- Recarregue a página
-
-### Arrastar não funciona
-- Certifique-se de que script.js está carregado
-- Verifique se não há erros no console
-- Tente em outro navegador
-
-### Servidor não inicia
-- Verifique se Node.js está instalado: `node --version`
-- Confirme que está na pasta correta
-- Veja se a porta 3000 está livre
-
----
-
-## 🚧 Funcionalidades Futuras
-
-- [ ] Sistema de login/autenticação
-- [ ] Categorias de posts
-- [ ] Filtros e busca
-- [ ] Exportar mural como imagem
-- [ ] Backend com banco de dados
-- [ ] Colaboração em tempo real
-- [ ] Modo escuro
-- [ ] Anexar imagens aos posts
-- [ ] Editar posts existentes
-- [ ] Ordenação automática
+- 🔓 **Senhas em texto puro** — `Login.php` compara a senha diretamente (`$senha == $user['usuSenha']`). O ideal é usar `password_hash()` / `password_verify()`.
+- 💾 **Blocos no `localStorage`** — as notas não são compartilhadas entre usuários nem persistidas no servidor; ficam apenas no navegador local.
+- 📦 **Upload sem validação profunda** — o `upload.php` aceita o arquivo enviado sem checar tipo MIME real ou tamanho.
+- 🟢 **`server.js` não roda PHP** — é apenas um servidor estático legado; o app completo exige Apache+PHP.
 
 ---
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Para contribuir:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/NovaFuncionalidade`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/NovaFuncionalidade`)
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+4. Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
-
----
-
-## 📝 Notas para Desenvolvedor
-
-### Convenções de Código
-
-- **JavaScript:** Use comentários JSDoc para funções
-- **CSS:** Organize estilos por seções
-- **HTML:** Manten indentação de 4 espaços
-- **Git:** Commits descritivos em português
-
-### Estrutura de Comentários
-
-```javascript
-// ===== SEÇÃO PRINCIPAL =====
-// Comentário de linha
-
-/**
- * Comentário de função (JSDoc)
- * @param {type} param - Descrição
- * @returns {type} Descrição
- */
-```
-
-### localStorage Keys
-
-- `muralPosts` - Array de todos os posts
-- `newPost` - Post temporário (não utilizado atualmente)
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
----
+Projeto distribuído sob a licença MIT.

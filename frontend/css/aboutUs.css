@@ -1,0 +1,77 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.container-about-us{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    max-width: 60vw;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg-body);
+}
+
+.title-aboutus{
+    color: var(--text);
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+
+.container-members{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    /* border: solid deepskyblue; */
+    gap: 16px;
+}
+
+.member{
+    /* border: solid deepskyblue;*/
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 18px;
+
+    background-color: var(--bg-card);
+    /* box-shadow: 0px 0px 7px 3px var(--bg-hover); */
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+}
+
+.member p{
+    color: var(--text-main);
+    font-size: 18px;
+    margin: 15px;
+    text-align: justify;
+    line-height: 1.7;
+}
+
+.text{
+    font-size: 22px;
+    text-align: center;
+    align-items: center;
+    line-height: 1.5;
+}
+
+h4{
+    color: var(--text);
+}
+
+.cat{
+    object-fit: cover;
+    border-radius: 70px;
+    width: 8vw;
+    height: 15vh;
+    object-fit: cover;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+    justify-content: center;
+}
